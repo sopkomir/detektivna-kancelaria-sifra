@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Detektívna kancelária Šifra</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+:root{--bg:#0a0e16;--bg2:#0f1522;--panel:rgba(255,255,255,.045);--panel2:rgba(255,255,255,.075);--line:rgba(255,255,255,.1);--txt:#eef2f8;--mut:#97a4ba;--acc:#ffb020;--acc2:#ff8a00;--cy:#38e1d6;--ok:#34d399;--bad:#fb7185;--paper:#f3e8cc;--ink:#2b2318;--r:22px;--fd:'Space Grotesk',system-ui,sans-serif;--fm:'JetBrains Mono',ui-monospace,monospace;--sh:0 12px 32px rgba(0,0,0,.35)}
+body.junior{--bg:#fff7ea;--bg2:#fff1da;--panel:#fff;--panel2:#fff6e8;--line:rgba(90,55,10,.12);--txt:#2d2340;--mut:#76688a;--acc:#ff7a1a;--acc2:#ff4f3a;--cy:#0ea5a0;--ok:#059669;--bad:#e11d48;--fd:'Fredoka',system-ui,sans-serif;--sh:0 6px 0 rgba(255,140,40,.16),0 14px 28px rgba(90,50,0,.08)}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--txt);font:17px/1.55 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 520px at 5% -10%,rgba(255,176,32,.13),transparent 60%),radial-gradient(700px 520px at 105% 105%,rgba(56,225,214,.11),transparent 60%),linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px) 0 0/100% 34px,linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px) 0 0/34px 100%}
+body.junior:before{background:radial-gradient(520px 380px at 0 0,#ffd9a8,transparent 65%),radial-gradient(480px 380px at 100% 25%,#c6f1e8,transparent 65%),radial-gradient(520px 420px at 25% 105%,#ffd3e2,transparent 65%)}
+h1,h2,h3{font-family:var(--fd);letter-spacing:-.015em}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ico{width:20px;height:20px;vertical-align:-4px;flex:none}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:10px 16px;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0;background:none;border:0;color:inherit;padding:0;text-align:left}
+.brand svg{width:40px;height:40px;flex:none}
+.brand b{display:block;font-family:var(--fm);font-size:19px;letter-spacing:.3em;color:var(--acc);line-height:1.1}
+.brand small{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+.ib{width:44px;height:44px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:14px}
+.wrap{max-width:860px;margin:0 auto;padding:18px 16px 96px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin:16px 0;box-shadow:var(--sh)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#1a1206;border:0;border-radius:999px;padding:12px 20px;font-weight:700;font-family:var(--fd);box-shadow:0 6px 20px color-mix(in srgb,var(--acc) 35%,transparent);transition:transform .12s}
+body.junior .btn:not(.ghost){color:#fff}
+.btn:hover{transform:translateY(-1px)}.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--panel);color:var(--txt);border:1px solid var(--line);box-shadow:none}
+.btn.sm{padding:8px 14px;font-size:15px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.inp{flex:1;min-width:0;padding:12px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg2);color:var(--txt);font:600 18px var(--fm);letter-spacing:.12em;text-transform:uppercase;outline:none}
+.inp:focus{border-color:var(--acc);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 20%,transparent)}
+.fb{margin-top:12px}.fb:empty{display:none}
+.fb.ok,.fb.bad{padding:10px 14px;border-radius:14px;font-weight:600}
+.fb.ok{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.fb.bad{background:color-mix(in srgb,var(--bad) 13%,transparent);color:var(--bad)}
+.mut{color:var(--mut);font-size:15px}
+.eyebrow{display:block;font-family:var(--fm);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--acc)}
+.chip{display:inline-flex;font-size:13px;padding:5px 12px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--mut)}
+.hero{padding:0;overflow:hidden}.hero .scene{display:block;width:100%;height:auto}
+.hero .in{padding:16px 20px 22px}
+.hero h2{font-size:clamp(28px,7vw,44px);line-height:1.02;margin:8px 0 10px}.hero h2 em{font-style:normal;color:var(--acc)}
+.rain line{stroke:#a9bdff;stroke-opacity:.35;stroke-width:1.2;animation:rain .7s linear infinite}
+@keyframes rain{from{transform:translate(6px,-30px)}to{transform:translate(-8px,40px)}}
+.win{animation:fl 6s infinite}@keyframes fl{0%,92%,100%{opacity:1}95%{opacity:.25}}
+.sec{display:flex;align-items:baseline;gap:10px;margin:30px 2px 12px}
+.sec .num{font-family:var(--fm);color:var(--acc);font-size:14px}.sec h3{margin:0;font-size:21px}
+.levels{display:grid;gap:10px}@media(min-width:640px){.levels{grid-template-columns:repeat(3,1fr)}}
+.lv{position:relative;display:flex;align-items:center;gap:12px;text-align:left;background:var(--panel);border:1.5px solid var(--line);color:var(--txt);border-radius:var(--r);padding:12px;box-shadow:var(--sh);transition:.18s}
+.lv .av{width:60px;height:60px;flex:none;border-radius:18px}
+.lv b{display:block;font-family:var(--fd);font-size:18px;line-height:1.2}.lv span{font-size:13px;color:var(--mut)}
+.lv.on{border-color:var(--acc);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 22%,transparent),var(--sh)}
+.lv.on:after{content:"✓";position:absolute;top:8px;right:10px;width:22px;height:22px;border-radius:50%;background:var(--acc);color:#1a1206;font-size:13px;font-weight:800;display:grid;place-items:center}
+.board{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:26px 14px;padding:30px 14px 20px;border-radius:24px;background:#2b2018 radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.5px) 0 0/13px 13px;box-shadow:inset 0 0 0 7px #3d2c1f,inset 0 0 50px rgba(0,0,0,.6),var(--sh)}
+body.junior .board{background:#dcab70 radial-gradient(rgba(120,70,20,.28) 1px,transparent 1.7px) 0 0/10px 10px;box-shadow:inset 0 0 0 8px #b57d40,var(--sh)}
+@media(min-width:640px){.board{grid-template-columns:repeat(3,1fr)}}
+.strings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.file{position:relative;z-index:1;display:flex;flex-direction:column;gap:3px;background:var(--paper);color:var(--ink);border:0;border-radius:3px;padding:22px 12px 14px;text-align:left;min-height:150px;box-shadow:0 12px 18px rgba(0,0,0,.35);transition:transform .2s}
+.file:nth-child(odd){transform:rotate(-1.4deg)}.file:nth-child(even){transform:rotate(1.2deg)}
+.file:not(.lock):hover{transform:translateY(-3px) scale(1.02)}
+body.junior .file:nth-child(4n+1){background:#fff3a6}body.junior .file:nth-child(4n+2){background:#ffd6e5}body.junior .file:nth-child(4n+3){background:#c9ecff}body.junior .file:nth-child(4n){background:#d4f5c9}
+.pin{position:absolute;top:-8px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff9a9a,#d21f1f 55%,#7a0e0e);box-shadow:0 4px 5px rgba(0,0,0,.45)}
+.fhead{display:flex;justify-content:space-between;align-items:center}
+.file .no{font-family:var(--fm);font-size:11px;letter-spacing:.2em;opacity:.6}
+.file .ico{width:24px;height:24px;opacity:.7}
+.file b{font-family:var(--fd);font-size:19px;line-height:1.12;margin-top:6px}
+.file .desc{font-size:13px;opacity:.72;line-height:1.3;margin-bottom:8px}
+.bar{height:7px;border-radius:9px;background:rgba(0,0,0,.12);overflow:hidden;margin-top:auto}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#16a34a,#4ade80)}
+.file.lock{cursor:default}.file.lock>:not(.tape):not(.pin){opacity:.42}
+.tape{position:absolute;right:-6px;bottom:16px;transform:rotate(-10deg);font:700 11px var(--fm);letter-spacing:.16em;color:#111;padding:4px 14px;background:repeating-linear-gradient(-45deg,#facc15 0 9px,#fde68a 9px 18px);box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.file .st{position:absolute;right:8px;top:24px;font:700 11px var(--fm);color:#b91c1c;border:2px solid #b91c1c;border-radius:6px;padding:1px 6px;transform:rotate(10deg)}
+.casehead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 2px 0}
+.casehead h2{margin:4px 0 0;font-size:clamp(28px,7vw,38px);line-height:1.05}
+.ring{width:66px;height:66px;flex:none}.ring text{font:700 13px var(--fm);fill:var(--txt)}
+.guide{display:flex;gap:14px;align-items:flex-start}
+.guide .av{width:76px;height:76px;flex:none;border-radius:22px;box-shadow:var(--sh)}
+.bubble{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:4px 20px 20px 20px;padding:12px 15px}
+.who{display:block;font:700 14px var(--fd);color:var(--acc);margin-bottom:2px}
+.say{margin-top:10px}
+.t{border-bottom:2px dotted var(--cy);cursor:help;font-weight:600}
+.tasknav{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;margin:6px -2px 0;scrollbar-width:none}
+.tasknav button{flex:none;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);color:var(--txt);border-radius:999px;padding:6px 14px 6px 6px;font-size:14px;font-weight:600}
+.tasknav .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);font:700 12px var(--fm)}
+.tasknav button.on{background:var(--txt);color:var(--bg);border-color:var(--txt)}
+.tasknav button.on .n{background:var(--acc);color:#1a1206}.tasknav button.ok .n{background:var(--ok);color:#fff}
+.task h3{margin:4px 0 8px;font-size:23px}
+.task .done{display:inline-block;color:var(--ok);font-size:13px;font-weight:700;margin-bottom:4px}
+.qcard{border:1px solid var(--line);border-radius:18px;padding:4px 14px 12px;margin:12px 0}
+.big{font-family:var(--fm);font-size:30px;font-weight:700;letter-spacing:.28em;text-align:center;padding:16px 10px;margin:12px 0;background:var(--bg2);border:1.5px dashed color-mix(in srgb,var(--acc) 50%,transparent);border-radius:18px;word-break:break-word;color:var(--acc)}
+body.junior .big{background:#fff;color:var(--txt)}
+.key{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.key span{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:4px 9px;font:500 14px var(--fm)}
+.slots{display:flex;gap:6px;justify-content:center;margin:14px 0;flex-wrap:wrap}
+.slot{width:46px;height:54px;border-radius:14px;background:var(--panel2);border:2px dashed var(--line);display:grid;place-items:center;font:700 26px var(--fd)}
+.slot:not(:empty){border:2px solid var(--acc);background:color-mix(in srgb,var(--acc) 14%,transparent)}
+.tiles{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:10px 0}
+.tile{width:58px;height:58px;border-radius:16px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:700 24px var(--fd);box-shadow:0 5px 0 var(--line);transition:transform .08s}
+.tile:active{transform:translateY(4px);box-shadow:0 1px 0 var(--line)}
+body.junior .tile{background:#fff;box-shadow:0 5px 0 #f5d1a3}
+.grid{display:grid;gap:3px;margin:14px auto;max-width:460px;padding:12px;background:var(--paper);border-radius:16px;box-shadow:var(--sh)}
+.grid .lab{font:600 13px var(--fm);color:#7a6644;padding-right:8px;display:flex;align-items:center;justify-content:flex-end;white-space:nowrap}
+.grid .c{aspect-ratio:1;border:1px solid #dccca4;background:#fffaf0;border-radius:4px;padding:0;transition:background .1s}
+.grid .c.on{background:#1f1a2e;border-color:#1f1a2e}
+.strip{overflow-x:auto;font:500 15px var(--fm);background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:10px 14px;margin:12px 0}
+.strip div{white-space:nowrap;letter-spacing:.35em}.strip .hi{color:var(--acc)}
+input[type=range]{width:100%;accent-color:var(--acc);height:30px}
+label{display:block;margin-top:8px;font-weight:600}
+.bits{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.bit{width:58px;border-radius:14px;border:1px solid var(--line);background:var(--panel2);color:var(--mut);padding:8px 0;text-align:center;font:600 12px var(--fm);box-shadow:0 4px 0 var(--line)}
+.bit b{display:block;font-size:26px;color:var(--txt)}
+.bit.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#1a1206;border-color:transparent}.bit.on b{color:#1a1206}
+.sw{height:96px;border-radius:18px;border:1px solid var(--line);flex:1}
+.bars{display:flex;gap:2px;align-items:flex-end;height:80px;margin:10px 0 22px}
+.bars div{flex:1;background:linear-gradient(var(--cy),color-mix(in srgb,var(--cy) 50%,transparent));border-radius:4px 4px 0 0;position:relative;min-width:8px}
+.bars span{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font:500 10px var(--fm);color:var(--mut)}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:13px 16px;border-radius:16px;border:1.5px solid var(--line);background:var(--panel2);color:var(--txt);font-weight:500;transition:.15s}
+.opt:hover{border-color:color-mix(in srgb,var(--acc) 55%,var(--line))}
+.opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,transparent)}
+.opt.bad{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 13%,transparent);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.closed{text-align:center;padding:24px 10px 6px}
+.stamp{display:inline-block;color:#e11d48;border:4px double #e11d48;border-radius:12px;padding:6px 18px;font:700 22px var(--fm);letter-spacing:.2em;transform:rotate(-8deg);animation:stamp .55s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes stamp{from{transform:rotate(-8deg) scale(2.6);opacity:0}}
+.sheet{position:fixed;inset:auto 0 0 0;z-index:50;background:var(--bg2);border-top:1px solid var(--line);border-radius:24px 24px 0 0;padding:12px 20px 30px;max-height:72vh;overflow:auto;box-shadow:0 -14px 50px rgba(0,0,0,.5);transform:translateY(110%);transition:.28s;visibility:hidden}
+.sheet:before{content:"";display:block;width:44px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 12px}
+.sheet.show{transform:none;visibility:visible}.sheet h3{margin:0 0 6px;color:var(--acc);font-size:22px}
+.gl dt{font:700 16px var(--fd);margin-top:12px}.gl dd{margin:0;color:var(--mut)}
+#intro{position:fixed;inset:0;z-index:60;background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px),radial-gradient(circle at 50% 40%,#1a2340,#05080e 70%);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+#intro.show{display:flex}
+#intro .inum{font:700 110px/1 var(--fm);color:transparent;-webkit-text-stroke:2px rgba(255,176,32,.55);animation:ia 1s both}
+#intro .ln{font:700 clamp(18px,5.6vw,40px) var(--fm);white-space:nowrap;margin:4px 0;opacity:0;letter-spacing:.15em}
+#intro .a1{animation:ia .8s .4s forwards}#intro .a2{animation:ia .8s 1.6s forwards;color:#ffb020}#intro .a3{animation:ia .8s 2.8s forwards;color:#38e1d6}
+@keyframes ia{from{opacity:0;transform:translateY(14px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+#intro p{max-width:520px;color:#c3cde0;opacity:0;animation:ia .8s 3.8s forwards}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}#intro *{opacity:1!important}}
+.doc{background:#fffdf7;color:#1f2937;border-radius:8px;padding:16px 18px;box-shadow:0 10px 24px rgba(0,0,0,.22);font:17px/1.75 Georgia,'Times New Roman',serif;margin:12px 0;white-space:pre-wrap;word-break:break-word}
+.doc .wd{cursor:pointer;border-radius:4px;padding:1px 2px}.doc .wd:hover{background:#fde68a}.doc .wd.fixed{background:#bbf7d0}
+.doc mark{background:#fde047;border-radius:3px}.hc{color:#0e9f9a;cursor:pointer;font:700 15px var(--fm);padding:0 2px;border-radius:4px}.hc:hover{background:#ccfbf1}
+.blk{display:block;width:100%;text-align:left;padding:8px 10px;margin:3px 0;border-radius:8px;border:2px solid transparent;background:none;font:inherit;color:inherit}.blk.sel{border-color:#f59e0b;background:#fef3c7}
+.tb{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px;margin:10px 0;background:var(--bg2);border:1px solid var(--line);border-radius:16px}.tb.col{flex-direction:column;align-items:stretch}
+.tbtn{min-width:42px;height:42px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.tbtn.on{background:var(--acc);color:#1a1206;border-color:transparent}
+.sep{width:1px;height:26px;background:var(--line);margin:0 2px}.dot{width:20px;height:20px;border-radius:50%;display:inline-block;box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
+.chk{display:inline-flex;align-items:center;gap:6px;margin:4px 8px 0 4px;font-weight:600;font-size:15px}.chk input{width:20px;height:20px;accent-color:var(--acc)}
+.page{position:relative;margin:14px auto;background:#fff;border-radius:3px;box-shadow:0 10px 24px rgba(0,0,0,.3);transition:width .3s,height .3s;overflow:hidden}
+.page .mg{position:absolute;top:0;bottom:0;left:0;background:repeating-linear-gradient(45deg,#fecaca 0 4px,#fff 4px 8px);transition:width .3s}
+.page .ln2{position:absolute;top:14px;right:10px;bottom:14px;background:repeating-linear-gradient(#cbd5e1 0 3px,transparent 3px 11px);transition:left .3s}
+.qrow{padding:10px 0;border-bottom:1px solid var(--line)}
+.tile.wide{width:auto;padding:0 14px;font-size:19px}.slot.wide{width:auto;min-width:56px;padding:0 10px;font-size:18px}
+.typ{font:500 19px/1.9 var(--fm);background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:10px 0;word-break:break-word}
+.tw{white-space:nowrap}.tc{color:var(--mut)}.tc.ok{color:var(--ok)}.tc.bad{color:#fff;background:var(--bad);border-radius:3px}.tc.cur{color:var(--txt);border-bottom:3px solid var(--acc)}
+.inp.tin{width:100%;text-transform:none;letter-spacing:0;border-radius:16px;font:500 18px var(--fm);resize:vertical}
+.inp.sel{flex:0 0 150px;text-transform:none;letter-spacing:0;font-size:15px;border-radius:12px}
+.qline{font:600 19px var(--fd);margin:10px 0}
+.kb{background:var(--bg2);border:1px solid var(--line);padding:8px 6px;border-radius:16px;margin:12px 0}
+.kr{display:flex;gap:4px;justify-content:center;margin:5px 0}
+.kk{flex:1 1 0;max-width:40px;height:46px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);font:600 16px var(--fm);box-shadow:0 3px 0 var(--line);padding:0}
+body.junior .kk{background:#fff}.kk.wide{max-width:none;flex:1.8 1 0;font-size:12px}.kk.space{flex:6 1 0}.kk.hit{background:var(--ok)!important;color:#fff}
+.sheetw{overflow-x:auto;margin:12px 0;border-radius:12px;border:1px solid var(--line);box-shadow:var(--sh)}
+table.xs{border-collapse:collapse;font:500 14px var(--fm);background:#fff;color:#1f2937;min-width:100%}
+.xs th{background:#eef2f7;color:#64748b;font-weight:600;padding:5px 8px;border:1px solid #dbe2ea;font-size:12px;white-space:nowrap}
+.xs td{border:1px solid #e2e8f0;padding:6px 7px;min-width:44px;height:38px;white-space:nowrap}
+.xs td.ed{background:#fffbeb}.xs td.sel{outline:2.5px solid #16a34a;outline-offset:-2px}.xs td.err{color:#dc2626}
+.xs tr.pick{cursor:pointer}.xs tr.pick:hover td{background:#fef9c3}.xs tr.hit td,.xs td.hit{background:#bbf7d0!important}
+.grid2 td{text-align:center;font-size:24px;width:52px;cursor:pointer}.grid2 td:hover{background:#fef9c3}
+.fbar{display:flex;gap:6px;align-items:center;margin-top:10px}.fbar .ad{font:700 14px var(--fm);min-width:48px;text-align:center;padding:10px 6px;border-radius:10px;background:var(--panel2);border:1px solid var(--line)}
+.thb{background:none;border:0;font:600 12px var(--fm);color:#334155;padding:0}
+.fsel{font:600 12px var(--fm);border:1px solid #cbd5e1;border-radius:8px;padding:3px 4px;background:#fff;color:#334155}.fsel.on{background:#fde68a;border-color:#f59e0b}
+.pile{font-size:30px;line-height:1.5;letter-spacing:4px;text-align:center;padding:12px;background:var(--paper);border-radius:16px;margin:12px 0}
+.inp.num{width:80px;flex:none;padding:6px 10px;font-size:18px;text-align:center;border-radius:10px;background:#fff;color:#1f2937;border-color:#cbd5e1}
+details.hint{margin:10px 0;padding:10px 14px;border-radius:14px;background:var(--panel2);border:1px solid var(--line)}details.hint summary{cursor:pointer;font-weight:700;color:var(--acc)}
+.srt{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin:10px 0;transition:.2s}.srt.done{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,transparent)}
+.post{background:#fff;color:#1f2937;border-radius:18px;padding:14px 16px;margin:12px 0;box-shadow:var(--sh);font-size:16px;line-height:1.6}
+.ph{display:flex;gap:10px;align-items:center;margin-bottom:8px}.pav{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f43f5e,#f59e0b);color:#fff;display:grid;place-items:center;font-weight:800}
+.post .mut{color:#64748b}.pf{color:#64748b;font-size:13px;margin-top:10px;border-top:1px solid #e5e7eb;padding-top:8px}
+.seg{cursor:pointer;border-radius:4px;transition:.15s}.seg:hover{background:#fef9c3}.seg.flag{background:#fecaca;text-decoration:underline wavy #dc2626}
+.exl{margin:10px 0;padding-left:20px;font-size:15px}.exl li{margin:6px 0}
+.sr{padding:10px 12px;border-radius:12px;border:1px solid var(--line);margin:8px 0;cursor:pointer;background:var(--panel)}.sr.ok{border-color:var(--ok)}
+.su{font:500 12px var(--fm);color:var(--ok)}.st2{color:#60a5fa;font-weight:600}body.junior .st2{color:#1d4ed8}.adb{font:700 10px var(--fm);background:#fde68a;color:#78350f;border-radius:5px;padding:1px 6px;float:right}
+.grs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}.gr{background:#fff;border-radius:14px;width:100%}.gr text{fill:#334155;font-family:system-ui}
+.opt.pk{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 16%,transparent)}
+.mix{display:flex;gap:3px;border-radius:999px;overflow:hidden;margin:10px 0;font-size:13px}.mix span{background:var(--panel2);padding:4px 8px;text-align:center;white-space:nowrap;border:1px solid var(--line)}
+.fp{display:flex;align-items:center;gap:6px;margin:6px 0;padding:8px 12px}
+.chat{margin:12px 0}.cq{margin-left:auto;max-width:85%;background:var(--acc);color:#1a1206;border-radius:18px 18px 4px 18px;padding:9px 14px;width:fit-content;font-weight:600}
+.ca{background:#fff;color:#1f2937;border-radius:18px 18px 18px 4px;padding:12px 14px;margin-top:8px;max-width:92%;box-shadow:var(--sh);line-height:1.6}.ca b{display:block;font-size:13px;color:#64748b;margin-bottom:4px}
+.cardg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}.tile.pk2{width:auto;font-size:20px}.tile.pk2.on{background:var(--acc);border-color:transparent}
+.pbar{position:relative;display:flex;align-items:center;width:100%;height:40px;margin:6px 0;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);overflow:hidden;padding:0 12px}
+.pbar span{position:absolute;left:0;top:0;bottom:0;background:color-mix(in srgb,var(--cy) 35%,transparent)}.pbar em{position:relative;font-style:normal;font-weight:700}.pbar i{position:relative;margin-left:auto;font:600 13px var(--fm)}
+.slide{position:relative;aspect-ratio:16/9;border-radius:10px;padding:8% 7%;box-shadow:var(--sh);overflow:hidden;margin:10px 0;border:1px solid #e2e8f0}
+.sl-t{font:700 15px var(--fd);margin-bottom:6%}.sl-b{display:flex;gap:6%;align-items:flex-start;height:68%;overflow:hidden}.sl-i{font-size:44px;line-height:1}
+.sl-a{position:absolute;right:8px;top:6px;font-size:12px}.wob .sl-t,.wob .sl-i{animation:wob 1.2s infinite}@keyframes wob{50%{transform:rotate(6deg) scale(1.08)}}
+.slb{background:none;border:3px solid transparent;border-radius:14px;padding:0}.slb.ok{border-color:var(--ok)}.slb .slide{margin:0}.slb .sl-t{font-size:10px}.slb .sl-i{font-size:24px}
+.n2{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--acc);color:#1a1206;font:700 12px var(--fm);flex:none}
+.mail{background:#fff;color:#1f2937;border-radius:16px;padding:12px 14px;box-shadow:var(--sh);margin:12px 0}.mail .mh{font-weight:800;margin-bottom:6px}.mail label{color:#475569;font-size:14px}
+.mail .inp{background:#f8fafc;color:#1f2937;border-color:#cbd5e1;margin-top:4px}.mail .qrow{border-color:#e2e8f0}
+.tree{font:500 14px/1.45 var(--fm);background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;overflow-x:auto}
+.cert{text-align:center;padding:24px 16px;border-radius:22px;border:2px dashed var(--line);background:var(--panel2);margin-bottom:10px}.cert.gold{border:3px double var(--acc)}
+.cert-b{font-size:64px;line-height:1}.cert-n{font:700 22px var(--fd);min-height:1.4em;color:var(--acc)}.cert-s{font:700 46px var(--fm);margin:4px 0}
+.catr{display:grid;grid-template-columns:1fr 90px 40px;gap:10px;align-items:center;margin:6px 0;font-size:15px}.catr .bar{margin:0}
+@media print{body:before,.top,#sheet{display:none!important}.task>*:not(.cert),.wrap>*:not(.task){display:none!important}.task{border:0;box-shadow:none}.cert{border:3px double #000}}
+body.patrac{--bg:#eef2f9;--bg2:#e7edf7;--panel:#fff;--panel2:#f4f7fc;--line:rgba(30,50,100,.13);--txt:#17213b;--mut:#5a6987;--acc:#4f46e5;--acc2:#7c3aed;--cy:#0891b2;--ok:#059669;--bad:#e11d48;--paper:#f6eedb;--sh:0 8px 24px rgba(40,60,120,.10)}
+body.patrac:before{background:radial-gradient(700px 420px at 0 0,rgba(99,102,241,.16),transparent 65%),radial-gradient(600px 420px at 100% 40%,rgba(8,145,178,.12),transparent 65%),linear-gradient(rgba(30,50,100,.035) 1px,transparent 1px) 0 0/100% 34px,linear-gradient(90deg,rgba(30,50,100,.035) 1px,transparent 1px) 0 0/34px 100%}
+body.patrac .btn:not(.ghost),body.patrac .tbtn.on,body.patrac .bit.on,body.patrac .bit.on b,body.patrac .tasknav button.on .n,body.patrac .lv.on:after,body.patrac .n2,body.patrac .cq,body.patrac .tile.pk2.on{color:#fff}
+body.patrac .big{background:#fff}body.patrac .brand svg circle,body.patrac .brand svg path{stroke:#fff}
+body.patrac .board{background:#d7ae7a radial-gradient(rgba(110,70,25,.25) 1px,transparent 1.7px) 0 0/10px 10px;box-shadow:inset 0 0 0 8px #a87542,var(--sh)}
+html,body{overflow-x:hidden}.wrap>*{min-width:0}.card{min-width:0}
+@media(max-width:380px){.wrap{padding:14px 12px 90px}.card{padding:14px}.big{font-size:24px;letter-spacing:.18em}.tile{width:50px;height:50px}.bit{width:48px}.kk{height:42px;font-size:14px}.guide .av{width:58px;height:58px}.brand small{display:none}.cardg{grid-template-columns:repeat(3,1fr)}.inp.sel{flex:1 1 130px}}
+@media(min-width:900px){.wrap{max-width:900px}.levels{gap:14px}.guide .av{width:96px;height:96px}}
+</style>
+</head>
+<body>
+<header class="top"><button class="brand" id="bHome" aria-label="Kancelária"><span><b>ŠIFRA</b><small>detektívna kancelária</small></span></button><button class="ib" id="bGl" title="Slovník pojmov"></button><button class="ib" id="bMute" title="Zvuk"></button></header>
+<main class="wrap" id="app"></main>
+<div class="sheet" id="sheet"></div>
+<div id="intro"></div>
+<script>
+const $=s=>document.querySelector(s);
+const el=(t,a={},...k)=>{const e=document.createElement(t);for(const[x,v]of Object.entries(a)){if(x=='html')e.innerHTML=v;else if(x.startsWith('on'))e[x]=v;else if(x=='class')e.className=v;else e.setAttribute(x,v)}k.flat().forEach(c=>c!=null&&c!==false&&e.append(c));return e};
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/\s+/g,' ').trim();
+const AB='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+/* ---------- stav ---------- */
+let S={lvl:null,prog:{},mute:false};
+try{Object.assign(S,JSON.parse(localStorage.getItem('sifra')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('sifra',JSON.stringify(S))}catch(e){}};
+const P=()=>(S.prog[S.lvl]=S.prog[S.lvl]||{});
+const markDone=(sp,id)=>{const p=P();p[sp]=p[sp]||[];if(!p[sp].includes(id))p[sp].push(id);save()};
+const isDone=(sp,id)=>(P()[sp]||[]).includes(id);
+
+/* ---------- zvuk a reč ---------- */
+let AC;function tone(f,d,t0=0){if(S.mute)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;o.connect(g);g.connect(AC.destination);const t=AC.currentTime+t0;g.gain.setValueAtTime(.15,t);g.gain.setValueAtTime(0,t+d);o.start(t);o.stop(t+d+.02)}catch(e){}}
+const beep=ok=>ok?(tone(660,.1),tone(880,.15,.12)):tone(200,.25);
+function speak(txt){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(txt.replace(/<[^>]+>/g,'').replace(/\[\[([^\]|]+)\|?([^\]]*)\]\]/g,(m,a,b)=>b||a));u.lang='sk-SK';u.rate=.95;speechSynthesis.speak(u)}catch(e){}}
+const sayBtn=t=>el('button',{class:'btn sm ghost say',onclick:()=>speak(t),title:'Prečítať nahlas',html:ic('vol')+' Prečítať'});
+
+/* ---------- slovník ---------- */
+const G={
+'informácia':'Správa, ktorá nám niečo nové oznámi alebo vysvetlí. Môže byť zapísaná textom, obrázkom, zvukom aj číslami.',
+'údaj':'Jednotlivý zapísaný záznam – napr. číslo, slovo, farba. Údaje sa stávajú informáciou, keď im rozumieme.',
+'kódovanie':'Zápis informácie pomocou dohodnutých znakov alebo čísel. Kódovanie nemusí byť tajné – napr. Morseova abeceda alebo kód písmen v počítači.',
+'šifra':'Tajné písmo. Odkaz je zapísaný tak, aby ho prečítal iba ten, kto pozná kľúč.',
+'šifrovanie':'Premena čitateľnej správy na tajnú podľa kľúča.',
+'dešifrovanie':'Premena tajnej správy späť na čitateľnú pomocou kľúča.',
+'kľúč':'Tajné pravidlo alebo tabuľka, podľa ktorej sa šifruje a dešifruje.',
+'kódovacia tabuľka':'Tabuľka, v ktorej je ku každému znaku priradený jeho kód – napr. A = 1, B = 2…',
+'Morseova abeceda':'Kód z bodiek (krátky signál) a čiarok (dlhý signál). Dá sa poslať zvukom, svetlom aj ťukaním.',
+'Caesarova šifra':'Každé písmeno sa posunie v abecede o rovnaký počet miest. Ten počet je kľúč. Používal ju vraj Július Caesar.',
+'frekvenčná tabuľka':'Tabuľka, ktorá ukazuje, koľkokrát sa každý znak v texte opakuje. Pomáha prelomiť jednoduché šifry.',
+'pixel':'Najmenší bod (štvorček) obrázka na obrazovke. Rastrový obrázok sa skladá z mriežky pixelov.',
+'rastrový obrázok':'Obrázok uložený ako mriežka pixelov. Pri veľkom zväčšení vidno „schodíky“ a rozmazanie.',
+'vektorový obrázok':'Obrázok uložený ako tvary (čiary, krivky, výplne). Dá sa ľubovoľne zväčšiť bez rozmazania.',
+'rozlíšenie':'Počet pixelov obrázka alebo obrazovky, napr. 1920 × 1080.',
+'kompresia':'Zmenšenie súboru tak, aby zaberal menej miesta – napr. zápis „5 čiernych“ namiesto piatich jednotlivých bodov.',
+'bit':'Najmenšia jednotka informácie: 0 alebo 1 (áno/nie, zapnuté/vypnuté).',
+'bajt':'Skupina 8 bitov. Jeden bajt dokáže zapísať 256 rôznych hodnôt (0 – 255).',
+'dvojková sústava':'Zápis čísel iba pomocou 0 a 1. Každé miesto má váhu 1, 2, 4, 8, 16… Počítače tak ukladajú všetko.',
+'RGB':'Model farieb na obrazovke: každá farba sa skladá z červenej (R), zelenej (G) a modrej (B), každá v rozsahu 0 – 255.',
+'ASCII':'Starší kód, ktorý priraďuje písmenám čísla (A = 65). Nemá slovenské znaky s diakritikou.',
+'Unicode':'Dnešný svetový kód znakov – obsahuje písmená všetkých jazykov aj emoji. Najčastejšie sa ukladá ako UTF-8.'
+};
+const tx=s=>s.replace(/\[\[([^\]|]+)\|?([^\]]*)\]\]/g,(m,k,d)=>`<span class="t" data-k="${k}">${d||k}</span>`);
+document.addEventListener('click',e=>{const t=e.target.closest('.t');if(t){openSheet(`<h3>${t.dataset.k}</h3><p>${G[t.dataset.k]||''}</p>`);e.stopPropagation()}else if(!e.target.closest('.sheet'))closeSheet()});
+function openSheet(h){const s=$('#sheet');s.innerHTML=h+'<p><button class="btn sm ghost" onclick="closeSheet()">Zavrieť</button></p>';s.classList.add('show')}
+function closeSheet(){$('#sheet').classList.remove('show')}
+
+/* ---------- ilustrácie ---------- */
+const I={book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M8 7h7M8 11h7"/>',vol:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/>',mute:'<path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/>',
+s1:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',s2:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/>',s3:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16M15 4v16"/>',s4:'<path d="M4 5h16v11H9l-5 4z"/><path d="M12 8v4M12 14.5h.01"/>',s5:'<rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9 16h6"/>',s6:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8M7 12l3-3 3 2 4-4"/>',ex:'<circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/>',reload:'<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>',back:'<path d="M15 5l-7 7 7 7"/>'};
+const ic=n=>`<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
+const AV={
+stopar:`<rect width="120" height="120" rx="32" fill="#ffc98a"/><circle cx="100" cy="18" r="34" fill="#fff" opacity=".25"/><ellipse cx="31" cy="68" rx="13" ry="27" fill="#8a4b22" transform="rotate(14 31 68)"/><ellipse cx="89" cy="68" rx="13" ry="27" fill="#8a4b22" transform="rotate(-14 89 68)"/><path d="M36 64c0-20 11-32 24-32s24 12 24 32c0 22-11 36-24 36S36 86 36 64z" fill="#c97a3d"/><path d="M52 50c0-5 3-9 8-9s8 4 8 9v22H52z" fill="#fff6ea"/><ellipse cx="60" cy="82" rx="16" ry="12" fill="#fff6ea"/><ellipse cx="60" cy="75" rx="6.5" ry="4.8" fill="#2a1d14"/><path d="M54 85q6 5 12 0" stroke="#2a1d14" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="47" cy="61" r="5.2" fill="#2a1d14"/><circle cx="73" cy="61" r="5.2" fill="#2a1d14"/><circle cx="48.8" cy="59.2" r="1.8" fill="#fff"/><circle cx="74.8" cy="59.2" r="1.8" fill="#fff"/><path d="M35 44c4-17 46-17 50 0z" fill="#7a5a34"/><path d="M45 31v13M60 27v17M75 31v13" stroke="#5b4124" stroke-width="3"/><path d="M30 44h60q-3 7-30 7t-30-7z" fill="#5b4124"/><circle cx="94" cy="96" r="12" fill="#bff3ee" fill-opacity=".7" stroke="#2d2340" stroke-width="4.5"/><path d="M85 105l-11 11" stroke="#2d2340" stroke-width="7" stroke-linecap="round"/>`,
+kadet:`<rect width="120" height="120" rx="32" fill="#1b2a44"/><circle cx="20" cy="104" r="40" fill="#38e1d6" opacity=".08"/><path d="M60 16l34 12v27c0 23-15 40-34 48-19-8-34-25-34-48V28z" fill="#ffb020"/><path d="M60 25l26 9v22c0 18-12 31-26 38-14-7-26-20-26-38V34z" fill="#1b2a44"/><circle cx="56" cy="55" r="12" fill="#38e1d61f" stroke="#38e1d6" stroke-width="5"/><path d="M65 64l10 10" stroke="#38e1d6" stroke-width="6" stroke-linecap="round"/>`,
+nora:`<rect width="120" height="120" rx="32" fill="#14304a"/><circle cx="98" cy="20" r="34" fill="#38e1d6" opacity=".13"/><path d="M34 62c0-22 12-32 26-32s26 10 26 32v16c0 4-4 6-8 6H42c-4 0-8-2-8-6z" fill="#1f1512"/><path d="M16 120c3-25 18-37 44-37s41 12 44 37z" fill="#b8874f"/><path d="M42 86l18 28 18-28-7-5-11 15-11-15z" fill="#9a6d3a"/><path d="M52 84l8 13 8-13z" fill="#eef2f8"/><rect x="53" y="70" width="14" height="15" rx="5" fill="#dca381"/><ellipse cx="60" cy="58" rx="17" ry="20" fill="#f0bf9e"/><path d="M42 56c3-15 17-20 32-12-7 2-11 9-26 11z" fill="#1f1512"/><path d="M51 60q3-3 6 0M63 60q3-3 6 0" stroke="#1d1a2a" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M55 69q5 4 10 0" stroke="#b5535a" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="43.5" cy="66" r="2.2" fill="#ffb020"/><path d="M38 41c2-17 42-17 44 0z" fill="#2c3346"/><rect x="38" y="36" width="44" height="5" fill="#ffb020"/><ellipse cx="60" cy="42" rx="33" ry="6" fill="#222838"/>`};
+const av=(k,a='class="av"')=>`<svg ${a} viewBox="0 0 120 120">${AV[k]}</svg>`;
+const LOGO='<svg viewBox="0 0 40 40"><rect width="40" height="40" rx="12" fill="var(--acc)"/><circle cx="17" cy="17" r="8" fill="none" stroke="#1a1206" stroke-width="3.4"/><path d="M23 23l8 8" stroke="#1a1206" stroke-width="4.2" stroke-linecap="round"/><path d="M13 17h2M18 17h3" stroke="#1a1206" stroke-width="2.4" stroke-linecap="round"/></svg>';
+function seeded(s){return()=>(s=(s*9301+49297)%233280)/233280}
+function town(dusk){const rn=seeded(11);let far='',near='',win='',rain='';const f=x=>x.toFixed(1);
+ for(let x=-5;x<405;){const w=22+rn()*30,h=70+rn()*70;far+=`<rect x="${f(x)}" y="${f(170-h)}" width="${f(w)}" height="${f(h+30)}"/>`;x+=w+2}
+ for(let x=-10;x<405;){const w=30+rn()*42,h=40+rn()*62;near+=`<rect x="${f(x)}" y="${f(192-h)}" width="${f(w)}" height="${f(h)}"/>`;for(let y=192-h+10;y<180;y+=14)for(let xx=x+6;xx<x+w-8;xx+=11)if(rn()<.2)win+=`<rect${rn()<.2?' class="win"':''} x="${f(xx)}" y="${f(y)}" width="5" height="7" rx="1"/>`;x+=w+4}
+ for(let i=0;i<55;i++){const x=rn()*420,y=rn()*210;rain+=`<line x1="${f(x)}" y1="${f(y)}" x2="${f(x-4)}" y2="${f(y+13)}" style="animation-delay:-${rn().toFixed(2)}s"/>`}
+ return `<svg class="scene" viewBox="0 0 400 220"><defs><linearGradient id="sk" x2="0" y2="1"><stop offset="0" stop-color="${dusk?'#3b3a8f':'#0b1430'}"/><stop offset="1" stop-color="${dusk?'#f59e8b':'#1d2448'}"/></linearGradient><linearGradient id="cn" x2="0" y2="1"><stop offset="0" stop-color="#ffd27a" stop-opacity=".5"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></linearGradient><radialGradient id="mg"><stop offset=".45" stop-color="#fff3d6" stop-opacity=".5"/><stop offset="1" stop-color="#fff3d6" stop-opacity="0"/></radialGradient></defs>
+ <rect width="400" height="220" fill="url(#sk)"/><circle cx="332" cy="46" r="40" fill="url(#mg)"/><circle cx="332" cy="46" r="17" fill="#fff3d6"/><circle cx="326" cy="42" r="3" fill="#e9dcbc"/>
+ <g fill="#18213f">${far}</g><g fill="#0b1124">${near}</g><g fill="#ffbf47">${win}</g>
+ <rect y="192" width="400" height="28" fill="#060a14"/><path d="M0 200h400" stroke="#1c2747"/><ellipse cx="190" cy="206" rx="70" ry="5" fill="#ffd27a" opacity=".12"/>
+ <polygon points="141,102 152,102 225,194 70,194" fill="url(#cn)"/><rect x="118" y="96" width="4" height="96" fill="#0d1428"/><path d="M120 99q11-8 26-1" stroke="#0d1428" stroke-width="4" fill="none"/><path d="M138 96h16l-3 6h-10z" fill="#ffd27a"/>
+ <g transform="translate(168 100)" fill="#04070d"><ellipse cx="20" cy="8" rx="17" ry="3.5"/><path d="M8 8Q9-7 20-7T32 8z"/><circle cx="20" cy="14" r="7"/><path d="M8 22Q20 16 32 22L39 82H1z"/><rect x="10" y="80" width="7" height="12"/><rect x="23" y="80" width="7" height="12"/><path d="M32 26l14 18" stroke="#04070d" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="40" r="7" fill="#38e1d6" fill-opacity=".25" stroke="#38e1d6" stroke-width="2.4"/></g>
+ ${dusk?'':`<g class="rain">${rain}</g>`}<text x="20" y="36" fill="#ffb020" fill-opacity=".8" font-family="JetBrains Mono,monospace" font-size="12" letter-spacing="3">·−·· ··− ·−−· ·−</text></svg>`}
+function townJ(){const houses=[['#ff8fab','#e5577a'],['#7dd3fc','#2b8fd6'],['#fde047','#f59e0b'],['#a7f3d0','#10b981'],['#c4b5fd','#7c3aed']];let h='';
+ houses.forEach(([c,r],i)=>{const x=14+i*52,y=118+(i%2)*10;h+=`<rect x="${x}" y="${y}" width="40" height="${190-y}" rx="3" fill="${c}"/><path d="M${x-4} ${y}l24-20 24 20z" fill="${r}"/><rect x="${x+8}" y="${y+12}" width="9" height="9" rx="2" fill="#fff"/><rect x="${x+23}" y="${y+12}" width="9" height="9" rx="2" fill="#fff"/><rect x="${x+15}" y="${174}" width="10" height="16" rx="2" fill="${r}"/>`});
+ let paws='';[[40,206],[70,202],[100,207],[130,201],[160,206],[190,200],[220,205],[250,199]].forEach(([x,y],i)=>paws+=`<g transform="translate(${x} ${y}) rotate(${i%2?-15:15}) scale(.85)"><ellipse cy="3" rx="4" ry="3.2"/><circle cx="-4" cy="-2" r="1.6"/><circle cy="-3.6" r="1.6"/><circle cx="4" cy="-2" r="1.6"/></g>`);
+ return `<svg class="scene" viewBox="0 0 400 220"><defs><linearGradient id="skj" x2="0" y2="1"><stop offset="0" stop-color="#9edcff"/><stop offset="1" stop-color="#e8f7ff"/></linearGradient></defs><rect width="400" height="220" fill="url(#skj)"/>
+ <g transform="translate(345 42)"><circle r="20" fill="#ffd166"/><g stroke="#ffd166" stroke-width="4" stroke-linecap="round">${[0,45,90,135,180,225,270,315].map(a=>`<path d="M0-28v-8" transform="rotate(${a})"/>`).join('')}</g></g>
+ <g fill="#fff"><ellipse cx="80" cy="44" rx="30" ry="12"/><ellipse cx="102" cy="38" rx="20" ry="12"/><ellipse cx="230" cy="60" rx="26" ry="10"/><ellipse cx="248" cy="54" rx="16" ry="10"/></g>
+ <path d="M0 150Q90 110 200 140T400 128V220H0z" fill="#9be38f"/><path d="M0 175Q120 150 250 170T400 160V220H0z" fill="#7cd17a"/>${h}
+ <rect y="190" width="400" height="30" fill="#f2d3a1"/><g fill="#a0612d" opacity=".55">${paws}</g>${av('stopar','x="276" y="98" width="112" height="112"')}</svg>`}
+const LV={
+junior:{n:'Mladší pátrači',s:'1. cyklus · 1. – 3. ročník',a:'stopar',g:'stopar',gn:'Pes Stopár'},
+patrac:{n:'Pátrači',s:'2. cyklus · 4. – 5. ročník',a:'kadet',g:'nora',gn:'Inšpektorka Nora'},
+insp:{n:'Inšpektori',s:'3. cyklus · 6. – 9. ročník, SŠ',a:'nora',g:'nora',gn:'Inšpektorka Nora'}
+};
+const SPISY=[{id:'s1',n:'Tajný odkaz',d:'šifry, kódovanie, pixely, bity'},{id:'s2',n:'Pokazená výpoveď',d:'práca s textom'},{id:'s3',n:'Alibi v tabuľke',d:'tabuľky a vzorce'},{id:'s4',n:'Hoax na nástenke',d:'overovanie informácií'},{id:'s5',n:'Svedok z AI',d:'AI a deepfake'},{id:'s6',n:'Záverečná správa',d:'prezentácia a zdroje'},{id:'ex',n:'Skúška detektíva',d:'tréning na IT Fitness Test'}];
+
+/* ---------- spoločné ovládacie prvky ---------- */
+function ask(box,correct,{hint,ph='Napíš riešenie',ok}={}){
+ const inp=el('input',{class:'inp',placeholder:ph,autocomplete:'off',autocapitalize:'characters',spellcheck:'false'});
+ const fb=el('div',{class:'fb'});let tries=0;
+ const go=()=>{if(!inp.value.trim())return;if(norm(inp.value)===norm(correct)){fb.className='fb ok';fb.textContent='✔ Správne!';beep(1);ok&&ok(fb)}
+  else{tries++;fb.className='fb bad';fb.innerHTML='✘ Ešte nie. '+(hint?'<br><b>Stopa:</b> '+hint:'');beep(0);
+   if(tries>=3)fb.append(' ',el('button',{class:'btn sm ghost',onclick:()=>fb.innerHTML=`Riešenie: <b>${correct}</b>. Vyskúšaj si potom nový prípad.`},'Ukáž riešenie'))}};
+ inp.onkeydown=e=>{if(e.key=='Enter')go()};
+ box.append(el('div',{class:'row'},inp,el('button',{class:'btn',onclick:go},'Overiť')),fb);
+}
+function tiles(box,items,correct,ok){
+ let cur=[];const out=el('div',{class:'slots'}),fb=el('div',{class:'fb'});
+ const draw=()=>{out.innerHTML='';correct.forEach((_,i)=>out.append(el('span',{class:'slot'+(items.some(x=>x.l.length>2)?' wide':'')},cur[i]?cur[i].l:'')))};
+ const check=()=>{if(cur.map(c=>c.v).join('|')===correct.join('|')){fb.className='fb ok';fb.textContent='✔ Výborne!';beep(1);ok&&ok(fb)}else{fb.className='fb bad';fb.textContent='✘ Niečo nesedí. Skús znova.';beep(0);setTimeout(()=>{cur=[];draw()},900)}};
+ box.append(out,el('div',{class:'tiles'},shuffle(items).map(it=>el('button',{class:'tile'+(it.l.length>2?' wide':''),onclick:()=>{if(cur.length<correct.length){cur.push(it);draw();fb.textContent='';if(cur.length==correct.length)check()}}},it.l))),
+  el('div',{class:'row',style:'justify-content:center'},el('button',{class:'btn sm ghost',onclick:()=>{cur.pop();draw()}},'⌫ Späť')),fb);draw();
+}
+function grid(box,pat,lab,ok){
+ const m=pat[0].length;let st=pat.map(r=>[...r].map(()=>0));
+ const g=el('div',{class:'grid',style:`grid-template-columns:auto repeat(${m},1fr)`});
+ pat.forEach((r,i)=>{g.append(el('div',{class:'lab'},lab(r)));[...r].forEach((_,j)=>{const c=el('button',{class:'c','aria-label':`riadok ${i+1}, stĺpec ${j+1}`,onclick:()=>{st[i][j]^=1;c.classList.toggle('on')}});g.append(c)})});
+ const fb=el('div',{class:'fb'});
+ box.append(g,el('div',{class:'row',style:'justify-content:center'},el('button',{class:'btn',onclick:()=>{const bad=pat.reduce((s,r,i)=>s+[...r].filter((v,j)=>+v!==st[i][j]).length,0);
+  if(!bad){fb.className='fb ok';fb.textContent='✔ Obrázok je presne podľa kódu!';beep(1);ok&&ok(fb)}else{fb.className='fb bad';fb.textContent=`✘ Nesedí ešte ${bad} ${bad==1?'políčko':bad<5?'políčka':'políčok'}. Skontroluj riadok po riadku.`;beep(0)}}},'Skontrolovať')),fb);
+}
+function mc(box,q,ok){
+ const opts=shuffle([q.a,...q.w]);const fb=el('div',{class:'fb'});let done=false;
+ box.append(el('p',{html:'<b>'+q.q+'</b>'}),...opts.map(o=>{const b=el('button',{class:'opt',onclick:()=>{if(done)return;if(o===q.a){b.classList.add('ok');done=true;fb.className='fb ok';fb.innerHTML='✔ '+(q.e||'Správne.');beep(1);ok&&ok()}else{b.classList.add('bad');fb.className='fb bad';fb.textContent='✘ Skús inú možnosť.';beep(0)}}},o);return b}),fb);
+}
+
+/* ---------- SPIS 1: úlohy ---------- */
+const W={junior:['LUPA','STOPA','MAPA','PES','LIST','OKNO','PERO','KLOBUK','DOM'],
+ patrac:['ALIBI','SVEDOK','ODKAZ','HESLO','ZLODEJ','PRISTAV','STOPA','NOVINY','TIEN','ARCHIV'],
+ insp:['TIEN SA SKRYVA V PRISTAVE','STRETNUTIE O POLNOCI','HLADAJ V REDAKCII','NEVER KAZDEJ SPRAVE','DOKAZ JE V ARCHIVE','SLEDUJ CERVENE AUTO']};
+const EMO=['🌙','⭐','🍎','🐟','🌸','🔑','🎈','⚽','🍀','🐞','☂️','🎵','🔔','🍄','🐌','🚲','🌵','🧩','🎁','🦋','🍓','⚓','🐢','🌈','🍩','🎲'];
+const MORSE={A:'·−',B:'−···',C:'−·−·',D:'−··',E:'·',F:'··−·',G:'−−·',H:'····',I:'··',J:'·−−−',K:'−·−',L:'·−··',M:'−−',N:'−·',O:'−−−',P:'·−−·',Q:'−−·−',R:'·−·',S:'···',T:'−',U:'··−',V:'···−',W:'·−−',X:'−··−',Y:'−·−−',Z:'−−··'};
+const PIC7={srdce:['0110110','1111111','1111111','0111110','0011100','0001000','0000000'],domček:['0001000','0011100','0111110','1111111','0110110','0110110','0111110'],úsmev:['0111110','1000001','1010101','1000001','1011101','1000001','0111110'],stromček:['0001000','0011100','0111110','0011100','0111110','1111111','0001000']};
+const PIC8={srdce:['01100110','11111111','11111111','11111111','01111110','00111100','00011000','00000000'],kľúč:['00000000','01110000','10001000','10001111','10001101','01110101','00000000','00000000'],lupa:['00111000','01000100','10000010','10000010','01000100','00111110','00000111','00000011'],šípka:['00011000','00111100','01111110','11011011','00011000','00011000','00011000','00000000'],úsmev:['00111100','01000010','10100101','10000001','10100101','10011001','01000010','00111100']};
+const caesar=(s,k)=>s.replace(/[A-Z]/g,c=>AB[(AB.indexOf(c)+k+26)%26]);
+const rle=r=>r.match(/0+|1+/g).map(x=>x.length+(x[0]=='1'?'●':'○')).join(' ');
+function pickKey(word,extra=4){const lets=[...new Set(word.replace(/ /g,''))];const pool=shuffle(AB.split('').filter(c=>!lets.includes(c))).slice(0,extra);const em=shuffle(EMO);const map={};[...lets,...pool].forEach((c,i)=>map[c]=em[i]);return map}
+
+const T={
+symDec:{n:'Obrázkové písmo',run(b,ok){const w=pick(W.junior),k=pickKey(w);
+ b.append(el('p',{html:tx(pick(['Na lístku sú namiesto písmen obrázky. Pomocou [[kľúč|kľúča]] zisti, aké slovo tam je.','Stopár našiel odkaz z obrázkov. Pozri sa do tabuľky – každý obrázok znamená jedno písmeno.']))}),
+ el('div',{class:'key'},shuffle(Object.keys(k)).map(c=>el('span',{},k[c]+' = '+c))),el('div',{class:'big'},[...w].map(c=>k[c]).join(' ')));
+ tiles(b,shuffle(Object.keys(k)).map(c=>({l:c,v:c})),[...w],ok)}},
+symEnc:{n:'Zašifruj odkaz',run(b,ok){const w=pick(W.junior),k=pickKey(w,3);
+ b.append(el('p',{html:tx(pick([`Teraz ty! Zašifruj slovo <b>${w}</b>, aby ho nikto cudzí neprečítal.`,`Pošli Stopárovi tajnú správu <b>${w}</b>. Zapíš ju obrázkami podľa tabuľky.`]))}),
+ el('div',{class:'key'},Object.keys(k).sort().map(c=>el('span',{},c+' = '+k[c]))));
+ tiles(b,Object.keys(k).map(c=>({l:k[c],v:c})),[...w],ok)}},
+pix01:{n:'Obrázok z čísel',run(b,ok){const nm=pick(Object.keys(PIC7));
+ b.append(el('p',{html:tx(`Počítač si obrázok pamätá ako čísla. Políčko je [[pixel]]. <b>1</b> = vyfarbi, <b>0</b> = nechaj prázdne. Ťukni na políčka podľa čísel.`)}));
+ grid(b,PIC7[nm],r=>r.split('').join(' '),fb=>{fb.textContent+=` Je to ${nm}!`;ok()})}},
+caesar:{n:'Caesarova šifra',run(b,ok){const w=pick(W.patrac),k=rnd(1,5),c=caesar(w,k);
+ b.append(el('p',{html:tx(`Odkaz je zašifrovaný [[Caesarova šifra|Caesarovou šifrou]]. Každé písmeno je posunuté v abecede o <b>${k}</b> ${k==1?'miesto':k<5?'miesta':'miest'} dopredu. Nastav posuvník na ${k} a čítaj zo spodného riadku hore.`)}),el('div',{class:'big'},c));
+ const st=el('div',{class:'strip'}),r=el('input',{type:'range',min:0,max:25,value:0});
+ const draw=()=>{const v=+r.value;st.innerHTML=`<div>tajné: ${[...AB].map(x=>caesar(x,v)).join('')}</div><div class="hi">správa: ${AB}</div><div class="mut">posun: ${v}</div>`};
+ r.oninput=draw;draw();b.append(st,r);ask(b,w,{hint:`Nájdi písmeno ${c[0]} v hornom riadku pri posune ${k}. Pod ním je písmeno správy.`,ok})}},
+morse:{n:'Morseova abeceda',run(b,ok){const w=pick(W.patrac.filter(x=>x.length<=6)),code=[...w].map(c=>MORSE[c]);
+ b.append(el('p',{html:tx(`Z prístavu blikalo svetlo. Zapísali sme ho v [[Morseova abeceda|Morseovej abecede]]: <b>·</b> krátko, <b>−</b> dlho. Lomka oddeľuje písmená.`)}),el('div',{class:'big',style:'font-size:24px;letter-spacing:3px'},code.join(' / ')),
+  el('button',{class:'btn sm ghost',onclick:()=>{let t=0;code.forEach(cd=>{[...cd].forEach(s=>{const d=s=='·'?.12:.36;tone(600,d,t);t+=d+.12});t+=.35})}},'▶ Prehrať signál'),
+  el('div',{class:'key'},Object.entries(MORSE).map(([c,m])=>el('span',{},c+' '+m))));ask(b,w,{hint:`Prvé písmeno ${code[0]} nájdi v tabuľke – je to ${w[0]}.`,ok})}},
+pixRLE:{n:'Skrátený obrázok',run(b,ok){const nm=pick(Object.keys(PIC8));
+ b.append(el('p',{html:tx(`Aby sa odkaz zmestil do krátkej správy, Tieň obrázok skrátil. <b>3●</b> znamená tri čierne [[pixel|pixely]] za sebou, <b>2○</b> dva biele. Takému skracovaniu sa hovorí [[kompresia]].`)}));
+ grid(b,PIC8[nm],rle,fb=>{fb.textContent+=` Je to ${nm}.`;ok()})}},
+binDec:{n:'Správa z bitov',run(b,ok){const w=pick(W.patrac.filter(x=>x.length<=6));
+ b.append(el('p',{html:tx(`Tieň poslal správu v [[dvojková sústava|dvojkovej sústave]]. Každé písmeno má číslo (A = 1, B = 2 … Z = 26) zapísané piatimi [[bit|bitmi]]. Miesta majú váhy <b>16 8 4 2 1</b> – sčítaj váhy tam, kde je 1.`)}),
+  el('div',{class:'big',style:'font-size:22px;letter-spacing:2px'},[...w].map(c=>(AB.indexOf(c)+1).toString(2).padStart(5,'0')).join(' ')),
+  el('div',{class:'key'},[...AB].map((c,i)=>el('span',{},`${i+1}=${c}`))));
+ ask(b,w,{hint:`Napríklad 00011 = 2 + 1 = 3 = C. Prvé písmeno je ${w[0]}.`,ok:fb=>{fb.append(el('div',{class:'mut',html:tx(' Skutočné počítače používajú na písmená dlhšie kódy – [[ASCII]] (A = 65) a dnes [[Unicode]], ktorý pozná aj á, ľ či emoji.')}));ok()}})}},
+binEnc:{n:'Zapíš číslo bitmi',run(b,ok){const n=rnd(17,250),W8=[128,64,32,16,8,4,2,1];let on=W8.map(()=>0);
+ const sum=el('div',{class:'big'},'0'),fb=el('div',{class:'fb'});
+ b.append(el('p',{html:tx(`Na trezore v archíve treba nastaviť číslo <b>${n}</b> ôsmimi prepínačmi. Spolu tvoria 1 [[bajt]]. Zapni tie, ktorých váhy dajú presne ${n}.`)}),
+  el('div',{class:'bits'},W8.map((w,i)=>{const x=el('button',{class:'bit',onclick:()=>{on[i]^=1;x.classList.toggle('on');x.querySelector('b').textContent=on[i];const s=W8.reduce((a,w,j)=>a+w*on[j],0);sum.textContent=s+'  =  '+on.join('');
+   if(s===n){fb.className='fb ok';fb.textContent='✔ Trezor sa otvoril!';beep(1);ok()}else fb.textContent=''}},el('b',{},'0'),w);return x})),sum,fb,
+  el('p',{class:'mut'},'Stopa: začni zľava. Ak sa váha ešte zmestí do zvyšku, zapni ju.'))}},
+rgb:{n:'Farba auta',run(b,ok){const V=[0,51,102,153,204,255],tg=[pick(V),pick(V),pick(V)],cur=[0,0,0];
+ const sw=el('div',{class:'sw'}),fb=el('div',{class:'fb'});
+ const upd=()=>{sw.style.background=`rgb(${cur})`;if(cur.join()==tg.join()){fb.className='fb ok';fb.textContent='✔ Presne táto farba! 3 farby × 8 bitov = 24 bitov na jeden pixel.';beep(1);ok()}else fb.textContent=''};
+ b.append(el('p',{html:tx(`Kamera zachytila auto podozrivého. V zázname je jeho farba uložená v modeli [[RGB]]: <b>R = ${tg[0]}, G = ${tg[1]}, B = ${tg[2]}</b>. Namiešaj ju posuvníkmi.`)}),
+  el('div',{class:'row'},sw,el('div',{class:'sw',style:`background:#0000;display:grid;place-items:center;font-size:13px`,html:'?'})),
+  ...['R – červená','G – zelená','B – modrá'].map((l,i)=>{const v=el('b',{},'0'),r=el('input',{type:'range',min:0,max:255,step:51,value:0});r.oninput=()=>{cur[i]=+r.value;v.textContent=r.value;upd()};return el('label',{},l+': ',v,r)}),fb);upd()}},
+caesarX:{n:'Prelom šifru',run(b,ok){const w=pick(W.insp),k=rnd(3,23),c=caesar(w,k);
+ const fr={};c.replace(/[A-Z]/g,x=>fr[x]=(fr[x]||0)+1);const mx=Math.max(...Object.values(fr));
+ const prev=el('div',{class:'big',style:'font-size:20px;letter-spacing:2px'}),r=el('input',{type:'range',min:0,max:25,value:0}),lab=el('div',{class:'mut'}),q=el('div');
+ const draw=()=>{prev.textContent=caesar(c,-r.value);lab.textContent='skúšam posun: '+r.value};r.oninput=draw;
+ b.append(el('p',{html:tx(`Tentoraz [[kľúč]] nepoznáme. Zachytená správa:`)}),el('div',{class:'big',style:'font-size:20px;letter-spacing:2px'},c),
+  el('p',{class:'mut',html:tx('[[frekvenčná tabuľka|Frekvenčná tabuľka]] zachytenej správy – v slovenčine je najčastejšie písmeno A, potom O a E:')}),
+  el('div',{class:'bars'},[...AB].map(x=>el('div',{style:`height:${(fr[x]||0)/mx*100}%;opacity:${fr[x]?1:.15}`},el('span',{},x)))),el('br'),
+  el('p',{},'Posúvaj, kým sa neobjaví zmysluplná veta:'),r,lab,prev,el('div',{class:'row'},el('button',{class:'btn',onclick:()=>{if(+r.value===k){beep(1);q.innerHTML='';
+   mc(q,{q:'Prelomené! Koľko posunov musí útočník pri Caesarovej šifre najviac vyskúšať?',a:'25',w:['26','52','nekonečne veľa'],e:'Posun 0 nič nezmení, ostáva 25 možností. Preto je Caesarova šifra slabá – dnešné šifry majú kľúčov viac, než je atómov na Zemi.'},ok)}else{beep(0);q.innerHTML='<p class="fb bad">✘ To ešte nie je zmysluplná veta.</p>'}}},'Toto je ono!')),q);draw()}}
+};
+
+const SP1={no:'01',name:'Tajný odkaz',intro:['ODKAZ','−−− −·· −·− ·− −−··','01111 00100 01011','Jednu informáciu môžeš zapísať písmenami, bodkami a čiarkami aj nulami a jednotkami. Naučíš sa ju zakódovať, zašifrovať – a zase rozlúštiť.'],
+story:{junior:`Ráno našiel Stopár na dverách kancelárie čudný lístok. Namiesto písmen sú na ňom obrázky! Niekto nám posiela [[šifra|tajný odkaz]]. Pomôžeš mu ho prečítať?`,
+ patrac:`V meste sa objavujú lístky podpísané menom <b>Tieň</b>. Sú [[šifrovanie|zašifrované]], aby im nikto nerozumel. Úlohou pátrača je zistiť, čo v nich stojí. Každá [[informácia]] sa dá zapísať rôznymi spôsobmi – písmenami, bodkami, číslami aj obrázkom.`,
+ insp:`Tieň komunikuje so spojencami cez zachytené signály. Aby sme ho pochopili, musíme rozumieť tomu, ako sa [[informácia]] mení na [[údaj|údaje]]: písmená na čísla, čísla na [[bit|bity]], farby na trojice čísel. Presne tak to robí každý počítač – tomu hovoríme [[kódovanie]].`},
+tasks:{junior:['symDec','symEnc','pix01'],patrac:['caesar','morse','pixRLE','binDec'],insp:['binDec','binEnc','rgb','caesarX']},
+quiz:{
+ junior:[{q:'Čo je šifra?',a:'Tajné písmo, ktoré prečíta len ten, kto pozná kľúč',w:['Druh pečiatky','Obrázok v knihe']},
+  {q:'Z čoho sa skladá obrázok v počítači?',a:'Z malých štvorčekov – pixelov',w:['Z farebných nití','Z písmen']},
+  {q:'Kamarát ti poslal šifru. Čo potrebuješ, aby si ju prečítal?',a:'Kľúč – tabuľku, podľa ktorej ju zašifroval',w:['Lupu','Veľkú obrazovku']},
+  {q:'Môže byť odkaz zapísaný číslami?',a:'Áno, každé písmeno môže mať svoje číslo',w:['Nie, iba písmenami','Iba na papieri']},
+  {q:'V mriežke platí 1 = vyfarbi, 0 = prázdne. Čo znamená 1 1 1?',a:'Tri vyfarbené políčka',w:['Jedno vyfarbené políčko','Tri prázdne políčka']}],
+ patrac:[()=>{const k=rnd(1,5),c=pick([...'ABCDEFGHIKLMNOPRST']);return{q:`Caesarova šifra s posunom ${k} zmení písmeno ${c} na…`,a:caesar(c,k),w:[caesar(c,k+1),caesar(c,k-1),caesar(c,-k)].filter((x,i,a)=>a.indexOf(x)==i&&x!==caesar(c,k))}},
+  {q:'Prečo je Morseova abeceda praktická?',a:'Dá sa poslať zvukom, svetlom aj ťukaním',w:['Je najrýchlejšia na písanie','Používa ju každý mobil na SMS']},
+  {q:'Zápis 3● 2○ znamená…',a:'3 čierne a potom 2 biele pixely',w:['3 biele a 2 čierne pixely','32 pixelov','3 riadky a 2 stĺpce']},
+  {q:'Čo je kľúč pri šifrovaní?',a:'Pravidlo, podľa ktorého sa šifruje aj dešifruje',w:['Kľúč od trezoru','Prvé slovo správy']},
+  ()=>{const a=rnd(4,12),c=rnd(4,12);return{q:`Obrázok má ${a} × ${c} pixelov. Koľko pixelov má spolu?`,a:String(a*c),w:[String(a+c),String(a*c+a),String(2*(a+c))].filter(x=>x!==String(a*c))}},
+  {q:'Prečo sa v šifrách často vynechávajú mäkčene a dĺžne?',a:'Kódovacia tabuľka je kratšia a jednoduchšia',w:['Lebo sú zakázané','Lebo ich počítač vôbec nepozná']}],
+ insp:[{q:'Koľko bitov má 1 bajt?',a:'8',w:['2','10','16']},
+  ()=>{const n=rnd(5,15);return{q:`Ktoré číslo je v dvojkovej sústave zapísané ako ${n.toString(2)}?`,a:String(n),w:[String(n+1),String(n-1),n.toString(2).replace(/^1/,'')||'0'].filter((x,i,a)=>a.indexOf(x)==i&&x!==String(n))}},
+  {q:'E-mail zobrazí meno „Ä½ubomĂ­r“ namiesto „Ľubomír“. Čo sa najpravdepodobnejšie stalo?',a:'Text bol prečítaný v inom kódovaní, než v akom bol uložený',w:['V e-maile je vírus','Písmo je príliš malé','Odosielateľ má pokazenú klávesnicu']},
+  {q:'Logo školy treba vytlačiť na veľký banner. Ktorý formát je lepší?',a:'Vektorový – pri zväčšení sa nerozmaže',w:['Rastrový s malým rozlíšením','Je to jedno, vyzerá to rovnako','Fotka obrazovky']},
+  {q:'Farba R = 255, G = 255, B = 0 je…',a:'žltá',w:['biela','červená','zelená']},
+  {q:'Fotka má 4000 × 3000 pixelov a každý pixel zaberá 3 bajty. Koľko zaberie bez kompresie približne?',a:'36 MB',w:['3,6 MB','360 kB','12 MB'],e:'4000 · 3000 · 3 = 36 000 000 bajtov ≈ 36 MB. Formát JPG ju skomprimuje na zlomok.'}]},
+clue:'Odkazy spolu dávajú zmysel: Tieň chce v meste rozšíriť falošnú správu. Ďalšia stopa vedie k svedkovi, ktorého výpoveď niekto pokazil… Pokračuj na nástenke – <b>Spis 02</b>.'
+};
+
+/* ---------- SPIS 2: úlohy ---------- */
+Object.assign(G,{'textový editor':'Program na písanie a úpravu textu, napr. Word, LibreOffice Writer alebo Dokumenty Google.','preklep':'Chyba pri písaní – prehodené, chýbajúce alebo navyše napísané písmeno.','formátovanie':'Úprava vzhľadu textu: písmo, veľkosť, farba, hrúbka, zarovnanie. Obsah sa pri tom nemení.','schránka':'Miesto v pamäti, kam sa uloží vystrihnutý alebo skopírovaný obsah (Ctrl + X, Ctrl + C), kým ho nevložíš (Ctrl + V).','Nájsť a nahradiť':'Nástroj editora, ktorý v celom texte vyhľadá slovo a vymení ho za iné – aj stokrát naraz.','odrážky':'Zoznam, v ktorom na poradí nezáleží. Každá položka začína značkou •.','číslovanie':'Zoznam, v ktorom záleží na poradí – napr. postup krok za krokom.','skryté znaky':'Znaky, ktoré sa netlačia: medzera (·), koniec odseku (¶), zalomenie riadka (↵), tabulátor (→). Ukáže ich tlačidlo ¶.','odsek':'Časť textu ukončená klávesom Enter. Má vlastné zarovnanie a odsadenie.','orientácia strany':'Na výšku alebo na šírku. Na šírku sa zmestí širšia tabuľka.','okraje':'Prázdne miesto na kraji strany. Väčší ľavý okraj je potrebný napr. pri zakladaní do šanónu.','PDF':'Formát, ktorý vyzerá na každom zariadení rovnako a ťažko sa upravuje. Vhodný na odoslanie a tlač.','DOCX':'Formát dokumentov Wordu – dá sa ďalej upravovať.','TXT':'Čistý text bez akéhokoľvek formátovania.','HTML':'Formát webových stránok.'});
+const SENT=['Svedok videl muža v čiernom kabáte.','Na lavičke pri parku ležal zabudnutý list.','Pes štekal pri starom prístave celú noc.','Muž mal na hlave tmavý klobúk.','V okne knižnice svietila malá lampa.'];
+function swap(w){const m=w.match(/^(.*?)([.,]?)$/),c=[...m[1]];for(let t=0;t<9;t++){const i=rnd(1,c.length-2);if(c[i]!==c[i+1]){[c[i],c[i+1]]=[c[i+1],c[i]];return c.join('')+m[2]}}return m[1]+c[c.length-1]+m[2]}
+const shk=x=>x.animate([{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'none'}],{duration:280});
+const win=(fb,t,ok)=>{fb.className='fb ok';fb.textContent='✔ '+t;beep(1);ok()};
+const lose=(fb,t)=>{fb.className='fb bad';fb.textContent='✘ '+t;beep(0)};
+const rxEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+Object.assign(T,{
+typo:{n:'Nájdi preklepy',run(b,ok){const sen=pick(SENT).split(' '),idx=shuffle(sen.map((w,i)=>i).filter(i=>sen[i].replace(/[.,]/g,'').length>=4)).slice(0,2);let f=0;const fb=el('div',{class:'fb'});
+ b.append(el('p',{html:tx('Lucka písala rýchlo a urobila dva [[preklep|preklepy]]. Ťukni na slová, ktoré sú napísané zle.')}),
+  el('div',{class:'doc'},sen.map((w,i)=>{const x=el('span',{class:'wd',onclick:()=>{if(x.dataset.f)return;if(idx.includes(i)){x.dataset.f=1;x.classList.add('fixed');x.textContent=w;beep(1);if(++f==2)win(fb,'Výpoveď je opravená!',ok)}else{shk(x);beep(0)}}},idx.includes(i)?swap(w):w);return[x,' ']})),fb)}},
+order:{n:'Poskladaj vetu',run(b,ok){const w=pick(SENT).split(' ');
+ b.append(el('p',{},'Vetu z výpovede niekto rozstrihal. Poskladaj slová v správnom poradí. Pomôže ti veľké písmeno na začiatku a bodka na konci.'));
+ tiles(b,w.map(x=>({l:x,v:x})),w,ok)}},
+fmt:{n:'Uprav nadpis',run(b,ok){const J=S.lvl=='junior',C={červená:'#e11d48',modrá:'#2563eb',zelená:'#16a34a',čierna:'#1f2937'},SZ=J?{malé:16,veľké:30}:{12:14,18:19,24:25,32:32},AL={vľavo:'left','na stred':'center',vpravo:'right'};
+ const tg={b:Math.random()<.6,i:!J&&Math.random()<.5,u:Math.random()<.4,sz:pick(Object.keys(SZ).slice(1)),c:pick(Object.keys(C).slice(0,3)),al:J?'vľavo':pick(Object.keys(AL).slice(1))};if(!tg.b&&!tg.i&&!tg.u)tg.b=true;
+ const cur={b:false,i:false,u:false,sz:Object.keys(SZ)[0],c:'čierna',al:'vľavo'},fb=el('div',{class:'fb'}),h=el('div',{style:'font-family:Georgia,serif'},'Výpoveď svedka');
+ const req=[tg.b&&'tučné (B)',tg.i&&'kurzíva (I)',tg.u&&'podčiarknuté (U)',(J?'písmo ':'veľkosť ')+tg.sz+(J?'':' bodov'),'farba: '+tg.c,!J&&'zarovnanie '+tg.al].filter(Boolean);
+ const upd=()=>{Object.assign(h.style,{fontWeight:cur.b?800:400,fontStyle:cur.i?'italic':'normal',textDecoration:cur.u?'underline':'none',fontSize:SZ[cur.sz]+'px',color:C[cur.c],textAlign:AL[cur.al]});
+  tb.querySelectorAll('[data-k]').forEach(x=>x.classList.toggle('on',String(cur[x.dataset.k])==x.dataset.v));
+  if(Object.keys(tg).every(k=>tg[k]==cur[k]))win(fb,'Nadpis vyzerá presne podľa zadania. Obsah sa nezmenil – zmenil sa iba vzhľad.',ok);else fb.textContent=''};
+ const btn=(k,v,l,st='')=>el('button',{class:'tbtn','data-k':k,'data-v':String(v),style:st,onclick:()=>{cur[k]=typeof v=='boolean'?!cur[k]:v;if(typeof v=='boolean')cur[k]=!!cur[k];upd()}},l);
+ const tb=el('div',{class:'tb'},btn('b',true,'B','font-weight:900'),btn('i',true,'I','font-style:italic;font-family:Georgia,serif'),btn('u',true,'U','text-decoration:underline'),el('span',{class:'sep'}),
+  Object.keys(SZ).map(s=>btn('sz',s,s)),el('span',{class:'sep'}),Object.keys(C).map(c=>btn('c',c,el('span',{class:'dot',style:`background:${C[c]}`}),'padding:0 8px')),!J&&el('span',{class:'sep'}),!J&&Object.keys(AL).map(a=>btn('al',a,a=='vľavo'?'⇤':a=='vpravo'?'⇥':'⇔')));
+ tb.querySelectorAll('[data-k=b],[data-k=i],[data-k=u]').forEach(x=>x.onclick=()=>{cur[x.dataset.k]=!cur[x.dataset.k];upd()});
+ tb.querySelectorAll('[data-k=b],[data-k=i],[data-k=u]').forEach(x=>x.dataset.v='true');
+ b.append(el('p',{html:tx('Tieň pokazil [[formátovanie]] nadpisu. Nastav ho podľa pokynov sudcu:')}),el('div',{class:'key'},req.map(r=>el('span',{},r))),tb,el('div',{class:'doc'},h,el('p',{style:'margin:8px 0 0;font-size:15px'},'Dňa 14. novembra som videl…')),fb);upd()}},
+findRep:{n:'Nájsť a nahradiť',run(b,ok){fr(b,false,ok)}},
+findRep2:{n:'Nahradiť s rozumom',run(b,ok){fr(b,true,ok)}},
+clip:{n:'Presuň vety',run(b,ok){const E=['8:15 – Tieň vyšiel z kaviarne.','9:40 – Nastúpil do autobusu č. 12.','10:05 – Vystúpil pri prístave.','11:30 – Stretol muža v sivom.','12:10 – Odišiel k redakcii.'],s0=rnd(0,1),tg=E.slice(s0,s0+4);let a;do a=shuffle(tg);while(a.join()==tg.join());
+ let sel=-1,clip=null;const fb=el('div',{class:'fb'}),doc=el('div',{class:'doc'}),cb=el('div',{class:'mut'},'Schránka: prázdna');
+ const draw=()=>{doc.innerHTML='';a.forEach((t,i)=>doc.append(el('button',{class:'blk'+(i==sel?' sel':''),onclick:()=>{sel=i==sel?-1:i;draw()}},t)));cb.innerHTML=clip?'Schránka: <b>'+clip+'</b>':'Schránka: prázdna'};
+ b.append(el('p',{html:tx('Tieň poprehadzoval vety. Zoraď ich podľa času: ťukni na vetu, daj <b>Vystrihnúť</b>, potom ťukni na vetu, <b>pred</b> ktorú ju chceš vložiť, a daj <b>Vložiť</b>. Vystrihnutá veta čaká v [[schránka|schránke]].')}),
+  el('div',{class:'tb'},el('button',{class:'tbtn',onclick:()=>{if(sel<0||clip)return;clip=a.splice(sel,1)[0];sel=-1;draw()}},'✂ Vystrihnúť'),el('button',{class:'tbtn',onclick:()=>{if(!clip)return;a.splice(sel<0?a.length:sel,0,clip);clip=null;sel=-1;draw();if(a.join()==tg.join())win(fb,'Výpoveď má správne poradie!',ok)}},'📋 Vložiť'),el('span',{class:'mut',style:'align-self:center;font-size:13px'},'Ctrl+X · Ctrl+V')),cb,doc,fb);draw()}},
+lists:{n:'Odrážky alebo číslovanie',run(b,ok){const P=shuffle([['Ako nahlásiť stratu',['Zavolaj na číslo 158.','Povedz, čo sa stratilo.','Opíš, kde si to videl naposledy.','Počkaj na policajta.'],'n'],['Čo mal Tieň pri sebe',['dáždnik','sivý kufrík','mapu mesta','kľúče od auta'],'o']]);const st=[null,null],fb=el('div',{class:'fb'});
+ b.append(el('p',{html:tx('Vo výpovedi sú dva zoznamy. Pri jednom záleží na poradí, pri druhom nie. Vyber pre každý [[odrážky]] alebo [[číslovanie]].')}));
+ P.forEach(([h,it,t],k)=>{const ul=el('div',{class:'doc',style:'padding:12px 18px'});const draw=()=>{ul.innerHTML=`<b>${h}</b>`+it.map((x,i)=>`<div>${st[k]=='n'?(i+1)+'. ':st[k]=='o'?'• ':''}${x}</div>`).join('')};draw();
+  b.append(ul,el('div',{class:'tb'},[['o','• Odrážky'],['n','1. Číslovanie']].map(([v,l])=>{const x=el('button',{class:'tbtn',onclick:()=>{st[k]=v;x.parentNode.querySelectorAll('.tbtn').forEach(y=>y.classList.toggle('on',y==x));draw();if(st.every((s,i)=>s==P[i][2]))win(fb,'Postup je číslovaný, lebo kroky idú za sebou. Veci sú v odrážkach, lebo na poradí nezáleží.',ok)}},l);return x})))});b.append(fb)}},
+hidden:{n:'Skryté znaky',run(b,ok){const t=pick(['Svedok videl Tieňa o 21:30 pri prístave. Mal na sebe sivý kabát a niesol kufrík.','Dňa 14. novembra o 8:15 vyšiel Tieň z kaviarne. Pod pazuchou niesol hrubý zošit.']);
+ const tk=[...t].map(c=>({c,bad:false}));const sp=tk.map((x,i)=>x.c==' '?i:-1).filter(i=>i>0);const pk=shuffle(sp).slice(0,3);
+ pk.slice(0,2).forEach(i=>tk[i].dup=1);tk[pk[2]].br=1;tk.unshift({c:'\t',bad:true});
+ const out=[];tk.forEach(x=>{if(x.dup){out.push({c:' '},{c:' ',bad:true})}else if(x.br){out.push({c:' '},{c:'\n',bad:true})}else out.push(x)});
+ let show=false;const fb=el('div',{class:'fb'}),doc=el('div',{class:'doc'}),tg=el('button',{class:'tbtn',title:'Zobraziť skryté znaky',onclick:()=>{show=!show;tg.classList.toggle('on',show);draw()}},'¶');
+ const draw=()=>{doc.innerHTML='';out.forEach(x=>{if(x.del)return;if(!show){doc.append(x.c=='\n'?el('br'):x.c=='\t'?el('span',{style:'display:inline-block;width:40px'}):x.c);return}
+  if(x.c==' '||x.c=='\n'||x.c=='\t'){const m=el('span',{class:'hc',onclick:()=>{if(x.bad){x.del=1;beep(1);draw();if(!out.some(y=>y.bad&&!y.del))win(fb,'Text je čistý. Na zarovnanie a nové riadky sa nepoužívajú medzery a Enter navyše.',ok)}else{shk(m);lose(fb,'Táto medzera je potrebná – oddeľuje dve slová.')}}},x.c==' '?'·':x.c=='\t'?'→':'↵');doc.append(m);if(x.c=='\n')doc.append(el('br'))}else doc.append(x.c)});if(show)doc.append(el('span',{class:'hc'},'¶'))};
+ b.append(el('p',{html:tx('Výpoveď vyzerá skoro dobre, no pri tlači sa rozsype. Zapni [[skryté znaky]] tlačidlom <b>¶</b> a ťukaním zmaž všetky znaky navyše: tabulátor na začiatku, dvojité medzery a zalomenie riadka uprostred vety.')}),el('div',{class:'tb'},tg,el('span',{class:'mut',style:'align-self:center;font-size:13px'},'· medzera  → tabulátor  ↵ zalomenie  ¶ koniec odseku')),doc,fb);draw()}},
+layout:{n:'Nastav stranu',run(b,ok){const tg={o:pick(['výška','šírka']),s:pick(['A4','A5']),m:pick([2,2.5,3,3.5])},cur={o:'výška',s:'A4',m:2},fb=el('div',{class:'fb'});
+ const req=[tg.o=='šírka'?'V prílohe je tabuľka s 10 stĺpcami – na výšku sa nezmestí.':'Výpoveď je obyčajný text v jednom stĺpci.',tg.s=='A5'?'Tlačí sa do malého policajného zápisníka (polovica A4).':'Tlačí sa na bežný kancelársky papier.',`Zakladá sa do šanónu – ľavý okraj musí mať presne ${String(tg.m).replace('.',',')} cm.`];
+ const pg=el('div',{class:'page'}),mv=el('b',{},'2'),r=el('input',{type:'range',min:1,max:4,step:.5,value:2});
+ const upd=()=>{const W=cur.s=='A4'?210:148,H=cur.s=='A4'?297:210,[w,h]=cur.o=='výška'?[W,H]:[H,W],k=200/Math.max(w,h);Object.assign(pg.style,{width:w*k+'px',height:h*k+'px'});pg.innerHTML=`<div class="mg" style="width:${cur.m*10*k}px"></div><div class="ln2" style="left:${cur.m*10*k+8}px"></div>`;mv.textContent=String(cur.m).replace('.',',')+' cm';
+  b.querySelectorAll('[data-k]').forEach(x=>x.classList.toggle('on',cur[x.dataset.k]==x.dataset.v));if(cur.o==tg.o&&cur.s==tg.s&&cur.m==tg.m)win(fb,'Strana je pripravená na tlač.',ok);else fb.textContent=''};
+ r.oninput=()=>{cur.m=+r.value;upd()};const bt=(k,v,l)=>el('button',{class:'tbtn','data-k':k,'data-v':v,onclick:()=>{cur[k]=v;upd()}},l);
+ b.append(el('p',{html:tx('Výpoveď treba vytlačiť. Podľa pokynov nastav [[orientácia strany|orientáciu]], veľkosť papiera a [[okraje|ľavý okraj]]:')}),el('div',{class:'key'},req.map(x=>el('span',{style:'font-family:inherit'},x))),
+  el('div',{class:'tb'},bt('o','výška','▯ Na výšku'),bt('o','šírka','▭ Na šírku'),el('span',{class:'sep'}),bt('s','A4','A4'),bt('s','A5','A5')),el('label',{},'Ľavý okraj: ',mv,r),pg,fb);upd()}},
+fileFmt:{n:'Vyber formát',run(b,ok){const P=shuffle([['Výpoveď pošleš súdu. Nikto v nej nesmie nič meniť a musí vyzerať všade rovnako.','PDF'],['Kolega ju má ešte doplniť a upraviť vo Worde.','DOCX'],['Text načíta jednoduchý program, ktorý nepozná žiadne formátovanie.','TXT'],['Výpoveď zverejníš ako stránku na webe polície.','HTML'],['Tlačiareň v meste vytlačí iba súbor, ktorý vyzerá na každom počítači rovnako.','PDF']]).slice(0,3);const fb=el('div',{class:'fb'});
+ const ss=P.map(([q])=>{const s=el('select',{class:'inp',style:'text-transform:none;letter-spacing:0;flex:0 0 120px'},el('option',{value:''},'vyber…'),['PDF','DOCX','TXT','HTML'].map(f=>el('option',{value:f},f)));return s});
+ b.append(el('p',{html:tx('Výpoveď treba uložiť v rôznych formátoch. Ku každej situácii vyber vhodný: [[PDF]], [[DOCX]], [[TXT]] alebo [[HTML]].')}),...P.map(([q],i)=>el('div',{class:'row qrow'},el('span',{style:'flex:1 1 200px'},q),ss[i])),
+  el('div',{class:'row',style:'margin-top:10px'},el('button',{class:'btn',onclick:()=>{const bad=ss.filter((s,i)=>s.value!==P[i][1]).length;bad?lose(fb,`Nesedí ${bad} z 3. Pouvažuj: má sa súbor ešte upravovať? Musí vyzerať všade rovnako?`):win(fb,'Formáty sedia. Ten istý obsah môže byť uložený rôzne – podľa toho, na čo ho potrebuješ.',ok)}},'Overiť')),fb)}}
+});
+function fr(b,adv,ok){const fb=el('div',{class:'fb'});let txt,find,repl,tgt,opt={w:false,c:false};
+ if(adv){txt=pick(['Tieň sa skryl v tieni stromu na Tieňovej ulici. Svedok tvrdí, že Tieň mal tieňovú čiapku. Potom Tieň zmizol.','Tieň býva na Tieňovej ulici. Ráno Tieň sedel v tieni kaviarne a čítal noviny. Tieň mal tieňové okuliare.']);find='Tieň';repl='Podozrivý';
+  tgt=txt.replace(/(?<!\p{L})Tieň(?!\p{L})/gu,'Podozrivý')}
+ else{const [a,c]=shuffle(['Tomáš','Lukáš','Matúš','Juraj']);txt=`Svedok ${c} prišiel o 9:00. ${c} videl muža pri prístave. Policajt sa ${c}a spýtal, či si je istý. ${c} prikývol.`;find=c;repl=a;tgt=txt.split(c).join(a);
+  b.append(el('p',{html:tx(`Tieň v celej výpovedi prepísal meno svedka <b>${a}</b> na <b>${c}</b>. Oprav to naraz pomocou [[Nájsť a nahradiť]] (Ctrl + H).`)}))}
+ if(adv)b.append(el('p',{html:tx('Vo výpovedi treba prezývku <b>Tieň</b> nahradiť slovom <b>Podozrivý</b>. Pozor – ostatné slová (tieni, Tieňovej, tieňovú…) sa meniť nesmú. Vyskúšaj, čo urobia možnosti nástroja [[Nájsť a nahradiť]].')}));
+ let cur=txt;const doc=el('div',{class:'doc'}),fI=el('input',{class:'inp',placeholder:'Nájsť',style:'text-transform:none;letter-spacing:0'}),rI=el('input',{class:'inp',placeholder:'Nahradiť čím',style:'text-transform:none;letter-spacing:0'}),cnt=el('span',{class:'mut'});
+ const rx=()=>{const f=fI.value;if(!f)return null;const p=rxEsc(f);return new RegExp(opt.w?`(?<!\\p{L})${p}(?!\\p{L})`:p,'gu'+(opt.c?'':'i'))};
+ const draw=hl=>{const r=hl&&rx();doc.innerHTML=r?cur.replace(r,m=>`<mark>${m}</mark>`):cur;cnt.textContent=r?`nájdené: ${(cur.match(r)||[]).length}×`:''};
+ const ck=k=>{const x=el('label',{class:'chk'},el('input',{type:'checkbox',onchange:e=>{opt[k]=e.target.checked;draw(1)}}),k=='w'?' Iba celé slová':' Rozlišovať veľké/malé');return x};
+ b.append(el('div',{class:'tb col'},el('div',{class:'row'},fI,el('button',{class:'tbtn',onclick:()=>draw(1)},'🔍 Nájsť')),el('div',{class:'row'},rI,el('button',{class:'tbtn',onclick:()=>{const r=rx();if(!r)return;cur=cur.replace(r,rI.value);draw(0);
+   if(cur===tgt)win(fb,adv?'Presne tak. „Iba celé slová“ chráni slová, ktoré hľadaný text len obsahujú.':'Hotovo – všetky výskyty naraz. Ručne by si niektorý ľahko prehliadol.',ok);else lose(fb,'Text nie je správny – pozri, čo sa zmenilo navyše. Vráť zmenu a skús iné nastavenie.')}},'Nahradiť všetko')),
+  adv?el('div',{class:'row'},ck('w'),ck('c')):null,el('div',{class:'row'},cnt,el('button',{class:'tbtn',style:'margin-left:auto',onclick:()=>{cur=txt;draw(0);fb.textContent='';fb.className='fb'}},'↶ Späť (Ctrl+Z)'))),doc,fb);draw(0)}
+/* ---------- klávesnica a písanie ---------- */
+Object.assign(G,{'klávesová skratka':'Kombinácia klávesov, ktorá rýchlo spustí príkaz – napr. Ctrl + C skopíruje označený text.','kurzor':'Blikajúca čiarka v texte. Ukazuje, kam sa napíše ďalší znak.','diakritika':'Znamienka nad písmenami: dĺžeň (á), mäkčeň (č), vokáň (ô), dve bodky (ä). Na slovenskej klávesnici: dĺžeň = kláves ´ (vľavo od Backspace) a potom písmeno, mäkčeň = Shift + ´ a potom písmeno.'});
+const TIPS=['Veľké písmeno: drž Shift','á, í, é: najprv ´ (vľavo od Backspace), potom písmeno','č, ď, ň: Shift + ´, potom písmeno','ľ š č ť ž ý á í é sú aj v hornom rade'];
+function typ(b,target,{min=1,tips=TIPS,done}){
+ const view=el('div',{class:'typ'}),ta=el('textarea',{class:'inp tin',rows:2,autocomplete:'off',autocorrect:'off',autocapitalize:'off',spellcheck:'false',placeholder:'Píš sem…'}),st=el('div',{class:'mut'}),fb=el('div',{class:'fb'});let t0=0,fin=false;
+ const draw=()=>{const v=ta.value;if(!t0&&v)t0=Date.now();view.innerHTML='';
+  let w=el('span',{class:'tw'});view.append(w);[...target].forEach((c,i)=>{const x=el('span',{class:'tc'+(i<v.length?(v[i]===c?' ok':' bad'):i==v.length?' cur':'')},c==' '?' ':c);if(c==' '){view.append(x);w=el('span',{class:'tw'});view.append(w)}else w.append(x)});
+  const good=[...v].filter((c,i)=>c===target[i]).length;st.textContent=`${Math.min(v.length,target.length)} / ${target.length} znakov`;
+  if(v.length>=target.length&&!fin){const acc=good/target.length,cpm=Math.round(target.length/Math.max(1,(Date.now()-t0)/1000)*60);
+   if(acc>=min){fin=true;ta.disabled=true;win(fb,`Presnosť ${Math.round(acc*100)} %`+(min<1?`, rýchlosť ${cpm} znakov za minútu.`:'. Výborne!'),done)}
+   else lose(fb,`Presnosť ${Math.round(acc*100)} % – potrebuješ aspoň ${Math.round(min*100)} %. Červené znaky oprav klávesom Backspace.`)}};
+ ta.oninput=draw;ta.onpaste=e=>e.preventDefault();b.append(tips.length?el('div',{class:'key'},tips.map(t=>el('span',{style:'font-family:inherit'},t))):'',view,ta,st,fb);draw();
+}
+function pairs(b,txt,P,opts,msg,ok,kb=true){const fb=el('div',{class:'fb'}),ss=P.map(()=>el('select',{class:'inp sel'},el('option',{value:''},'vyber…'),opts.map(f=>el('option',{value:f},f))));
+ const kt=el('div',{class:'chip',style:'margin-top:10px'},'Vyskúšaj skratku na klávesnici – ukážem ju tu');
+ const kd=e=>{if(!kt.isConnected)return removeEventListener('keydown',kd);if(['Control','Shift','Alt','Meta'].includes(e.key))return;const k=[e.ctrlKey&&'Ctrl',e.shiftKey&&'Shift',e.altKey&&'Alt',({ArrowLeft:'šípka',ArrowRight:'šípka',ArrowUp:'šípka',ArrowDown:'šípka',' ':'medzera'})[e.key]||(e.key.length==1?e.key.toUpperCase():e.key)].filter(Boolean).join(' + ');kt.textContent='Stlačil si: '+k;if(e.ctrlKey&&!['c','v','x','a'].includes(e.key.toLowerCase()))e.preventDefault()};
+ if(kb)addEventListener('keydown',kd);
+ b.append(el('p',{html:tx(txt)}),...P.map(([q],i)=>el('div',{class:'row qrow'},el('span',{style:'flex:1 1 180px'},q),ss[i])),kb?kt:'',
+  el('div',{class:'row',style:'margin-top:10px'},el('button',{class:'btn',onclick:()=>{const bad=ss.filter((s,i)=>s.value!==P[i][1]).length;bad?lose(fb,`Nesedí ${bad} z ${P.length}. Vyskúšaj skratky priamo v hociktorom editore.`):win(fb,msg,ok)}},'Overiť')),fb)}
+Object.assign(T,{
+keys:{n:'Nájdi kláves',run(b,ok){
+ const L=shuffle([...'ščžáýôkpm']).slice(0,2).map(x=>['Ťukni na písmeno '+x.toUpperCase()+'.',x]);
+ const Q=shuffle([...shuffle([['Ktorým klávesom zmažeš písmeno naľavo?','⌫'],['Ktorým klávesom začneš nový riadok?','Enter'],['Ktorým klávesom urobíš medzeru medzi slovami?','medzera'],['Ktorý kláves podržíš, keď chceš veľké písmeno?','Shift']]).slice(0,3),...L]);
+ let k=0;const q=el('p',{class:'qline'}),fb=el('div',{class:'fb'});
+ const rows=[[...'ľščťžýáíé'],[...'qwertzuiopú'],[...'asdfghjklô'],['Shift',...'yxcvbnm','⌫'],['medzera','Enter']];
+ const show=()=>{q.innerHTML=`<span class="eyebrow">${k+1} / ${Q.length}</span>${Q[k][0]}`};
+ b.append(el('p',{html:tx('Stopár sa učí písať na počítači. Pomôž mu nájsť na klávesnici správny kláves.')}),q,
+  el('div',{class:'kb'},rows.map(r=>el('div',{class:'kr'},r.map(c=>{const x=el('button',{class:'kk'+(c.length>1?' wide':'')+(c=='medzera'?' space':''),onclick:()=>{if(k>=Q.length)return;if(c===Q[k][1]){beep(1);x.classList.add('hit');setTimeout(()=>x.classList.remove('hit'),450);if(++k==Q.length)win(fb,'Klávesnicu poznáš!',ok);else show()}else{shk(x);beep(0)}}},c);return x})))),
+  el('button',{class:'btn sm ghost say',onclick:()=>Q[k]&&speak(Q[k][0]),html:ic('vol')+' Prečítať'}),fb);show()}},
+type1:{n:'Napíš slová',run(b,ok){const W=shuffle(['lupa','stopa','Stopár','pes','Mapa','dom','list','Pátrač']).slice(0,3);let i=0;const box=el('div');
+ b.append(el('p',{html:tx('Napíš slovo presne tak, ako je napísané. Žlté podčiarknutie ukazuje, ktoré písmeno je na rade. Veľké písmeno: drž <b>Shift</b>. Dĺžeň (á): stlač <b>´</b> a potom písmeno.')}),box);
+ const go=()=>{box.innerHTML='';box.append(el('span',{class:'eyebrow'},`Slovo ${i+1} / 3`));typ(box,W[i],{tips:[],done:()=>{if(++i<3)setTimeout(go,700);else ok()}});box.querySelector('textarea').focus()};go()}},
+type2:{n:'Prepíš výpoveď',run(b,ok){b.append(el('p',{html:tx('Svedok diktoval výpoveď a ty ju musíš prepísať do počítača. Píš presne – aj veľké písmená, [[diakritika|diakritiku]] a bodku. Potrebuješ presnosť aspoň 95 %.')}));
+ typ(b,pick(['Svedok videl Tieňa pri prístave o pol desiatej.','Na lavičke ležal mokrý list a čierny dáždnik.','Tieň mal sivý kabát, tmavý klobúk a kožený kufrík.']),{min:.95,done:ok})}},
+type3:{n:'Rýchlopis',run(b,ok){b.append(el('p',{html:tx('Výpoveď treba prepísať rýchlo a bez chýb – presnosť aspoň 97 %. Aplikácia ti zmeria aj rýchlosť v znakoch za minútu. Skús sa pri ďalšom prípade zlepšiť.')}));
+ typ(b,pick(['Dňa 14. novembra o 21:30 som videl muža v sivom kabáte, ako nastupuje do auta s EČV MI-482AB.','Podozrivý mal na sebe tmavý klobúk; v pravej ruke niesol kufrík a ľavou si pridŕžal golier.','Svedkyňa uviedla: „Muž sa ponáhľal k prístavu, dvakrát sa obzrel a potom zmizol v hmle.“']),{min:.97,done:ok})}},
+shortcuts:{n:'Klávesové skratky',run(b,ok){const A=[['Kopírovať','Ctrl + C'],['Vložiť','Ctrl + V'],['Vystrihnúť','Ctrl + X'],['Vrátiť poslednú zmenu','Ctrl + Z'],['Uložiť dokument','Ctrl + S'],['Označiť všetko','Ctrl + A'],['Tučné písmo','Ctrl + B']];
+ pairs(b,'Profesionál nehľadá príkazy v menu – použije [[klávesová skratka|klávesovú skratku]]. Priraď ku každej činnosti správnu skratku.',shuffle(A).slice(0,4),A.map(x=>x[1]),'Skratky sedia! Vyskúšaj ich pri ďalšej práci – ušetria veľa času.',ok)}},
+shortcuts2:{n:'Skratky pre pokročilých',run(b,ok){const A=[['Nájsť a nahradiť','Ctrl + H'],['Nájsť slovo','Ctrl + F'],['Tlačiť','Ctrl + P'],['Nový riadok v tom istom odseku','Shift + Enter'],['Nová strana','Ctrl + Enter'],['Skok na začiatok dokumentu','Ctrl + Home'],['Zmazať celé slovo naľavo','Ctrl + Backspace'],['Označovať text po písmenách','Shift + šípka']];
+ pairs(b,'Rýchla práca s dokumentom je o [[klávesová skratka|klávesových skratkách]]. Priraď ku každej činnosti správnu skratku.',shuffle(A).slice(0,5),A.map(x=>x[1]),'Výborne. Skratky platia vo väčšine editorov – vo Worde, LibreOffice aj Dokumentoch Google.',ok)}}
+});
+const SP2={no:'02',name:'Pokazená výpoveď',
+intro:['výpoveť  svedka','výpoveď·svedka¶','<b>Výpoveď svedka</b>','Text nie je len to, čo je napísané, ale aj ako. Naučíš sa opraviť, upraviť a pripraviť dokument tak, ako to robia profesionáli.'],
+story:{junior:'Svedkyňa Lucka napísala, čo videla. Lenže sa ponáhľala a v texte sú chyby a neporiadok. Pomôžeš Stopárovi opraviť výpoveď v [[textový editor|textovom editore]]?',
+ patrac:'Svedok poslal výpoveď e-mailom. Tieň sa však dostal k jeho počítaču – prehádzal vety, zmenil meno a pokazil [[formátovanie]]. Oprav výpoveď skôr, než ju dostane sudca.',
+ insp:'Výpoveď hlavného svedka vyzerá na prvý pohľad v poriadku. Niekto v nej však nechal [[skryté znaky]], nenápadne menil slová a dokument sa nedá poriadne vytlačiť. Odhaľ, čo sa v ňom skrýva.'},
+tasks:{junior:['keys','type1','typo','order','fmt'],patrac:['type2','shortcuts','fmt','findRep','clip','lists'],insp:['type3','shortcuts2','hidden','findRep2','layout','fileFmt']},
+quiz:{junior:[{q:'Ako zväčšíš písmo nadpisu?',a:'Zmením veľkosť písma',w:['Napíšem ho dvakrát','Stlačím Enter']},{q:'Čo je preklep?',a:'Chyba pri písaní – zle napísané slovo',w:['Pekné písmo','Nadpis']},{q:'Ktoré tlačidlo urobí písmo tučné (hrubé)?',a:'B',w:['I','U']},{q:'Čím oddeľujeme slová v texte?',a:'Medzerou',w:['Bodkou','Číslom']},{q:'Ktorý kláves podržíš, keď chceš napísať veľké písmeno?',a:'Shift',w:['Enter','Medzerník']},{q:'Čo urobí kláves Enter v textovom editore?',a:'Začne nový riadok',w:['Zmaže slovo','Vypne počítač']}],
+ patrac:[{q:'Čo urobí príkaz Nahradiť všetko?',a:'Vymení každý výskyt hľadaného slova za nové',w:['Zmaže celý text','Nahradí iba prvé slovo v texte']},{q:'Kam sa uloží text, keď ho skopíruješ (Ctrl + C)?',a:'Do schránky',w:['Do koša','Na pracovnú plochu']},{q:'Aký je rozdiel medzi Vystrihnúť a Kopírovať?',a:'Vystrihnúť text z pôvodného miesta odstráni, Kopírovať ho tam nechá',w:['Žiadny','Kopírovať text zmaže']},{q:'Postup „ako uložiť súbor“ krok za krokom zapíšeš najlepšie ako…',a:'číslovaný zoznam',w:['zoznam s odrážkami','jeden dlhý odsek']},{q:'Ako napíšeš á na slovenskej klávesnici?',a:'Stlačím ´ (vľavo od Backspace) a potom a',w:['Podržím Shift a stlačím a','Napíšem a dvakrát']},{q:'Ktorá skratka vráti poslednú zmenu?',a:'Ctrl + Z',w:['Ctrl + V','Ctrl + S']},{q:'Čo je formátovanie textu?',a:'Úprava vzhľadu – písmo, veľkosť, farba, zarovnanie',w:['Oprava pravopisu','Zmazanie textu']}],
+ insp:[{q:'Prečo sa text nemá zarovnávať viacerými medzerami?',a:'Pri zmene písma alebo okrajov sa rozsype; na to slúžia tabulátory a zarovnanie odseku',w:['Medzery sú povinné','Zaberajú veľa miesta na disku']},{q:'Čo urobí Ctrl + Backspace?',a:'Zmaže celé slovo naľavo od kurzora',w:['Zmaže celý dokument','Vráti poslednú zmenu']},{q:'Čo zobrazí tlačidlo ¶?',a:'Skryté znaky – medzery, konce odsekov, tabulátory',w:['Počet strán','Pravopisné chyby']},{q:'Chceš nahradiť slovo „les“, ale nezmeniť slovo „lesník“. Ktorú možnosť zapneš?',a:'Iba celé slová',w:['Rozlišovať veľké/malé','Nijakú, stačí Nahradiť všetko']},{q:'Široká tabuľka sa nezmestí na stranu. Čo pomôže najviac?',a:'Zmeniť orientáciu strany na šírku',w:['Zväčšiť písmo','Pridať prázdne riadky']},{q:'V akom formáte pošleš dokument, ktorý sa nemá meniť a má vyzerať všade rovnako?',a:'PDF',w:['DOCX','TXT','HTML']},{q:'Čím sa líši Enter od Shift + Enter?',a:'Enter začne nový odsek, Shift + Enter iba nový riadok v tom istom odseku',w:['Ničím','Shift + Enter zmaže riadok']}]},
+clue:'Svedok si spomenul, že Tieň mal pri sebe zošit s tabuľkou časov a mien. Ak ju dokážeme prečítať, overíme, kto má alibi… Pokračuj na nástenke – <b>Spis 03</b>.'};
+/* ---------- SPIS 3: tabuľky ---------- */
+Object.assign(G,{'tabuľka':'Údaje usporiadané do riadkov a stĺpcov. Riadky sú očíslované (1, 2, 3…), stĺpce označené písmenami (A, B, C…).','bunka':'Jedno políčko tabuľky. Leží na priesečníku stĺpca a riadka.','adresa bunky':'Písmeno stĺpca a číslo riadka, napr. B3 = stĺpec B, riadok 3.','frekvenčná tabuľka':'Tabuľka, ktorá ukazuje, koľkokrát sa niečo opakuje.','zoradenie':'Usporiadanie riadkov podľa stĺpca – vzostupne (od najmenšieho) alebo zostupne (od najväčšieho).','filter':'Nástroj, ktorý dočasne skryje riadky nespĺňajúce podmienku. Údaje nemaže.','vzorec':'Výpočet v bunke. Začína znakom = (napr. =B2*C2). Keď sa zmenia čísla, výsledok sa prepočíta sám.','funkcia':'Hotový výpočet v tabuľkovom editore: SUM (súčet), AVERAGE (priemer), MIN, MAX, COUNTIF (počet buniek spĺňajúcich podmienku).','relatívna adresa':'Adresa bez $ (napr. B2). Pri kopírovaní vzorca sa posúva spolu s ním.','absolútna adresa':'Adresa so znakom $ (napr. $B$1). Pri kopírovaní vzorca sa nemení.','typ údajov':'Čo je v bunke: číslo, text, dátum, čas, mena, percento. Od typu závisí, čo sa s údajom dá počítať.','graf':'Obrázok z čísel. Stĺpcový porovnáva, čiarový ukazuje vývoj v čase, koláčový podiel častí z celku, bodový vzťah dvoch veličín.'});
+const COLS='ABCDEFGH',isN=x=>typeof x=='number'&&isFinite(x),fl=a=>a.flat(9);
+const fmtN=v=>isN(v)?(Number.isInteger(v)?String(v):v.toFixed(2).replace('.',',')):String(v);
+function evalF(f,get){try{const strs=[];let e=f.slice(1).replace(/"([^"]*)"/g,(m,s)=>{strs.push(s);return `§${strs.length-1}§`}).toUpperCase().replace(/;/g,',').replace(/\bSUMA\b/g,'SUM').replace(/\bPRIEMER\b/g,'AVERAGE').replace(/\bPOČET\b/g,'COUNT');
+ e=e.replace(/\$?([A-H])\$?(\d+):\$?([A-H])\$?(\d+)/g,(m,c1,r1,c2,r2)=>{const a=[];for(let c=COLS.indexOf(c1);c<=COLS.indexOf(c2);c++)for(let r=+r1;r<=+r2;r++)a.push(JSON.stringify(get(COLS[c]+r)));return '['+a.join(',')+']'});
+ e=e.replace(/\$?([A-H])\$?(\d+)/g,(m,c,r)=>{const v=get(c+r);return isN(v)?`(${v})`:v===''?'(0)':JSON.stringify(v)});
+ const F={SUM:(...a)=>fl(a).filter(isN).reduce((x,y)=>x+y,0),AVERAGE:(...a)=>{const n=fl(a).filter(isN);return n.reduce((x,y)=>x+y,0)/n.length},MIN:(...a)=>Math.min(...fl(a).filter(isN)),MAX:(...a)=>Math.max(...fl(a).filter(isN)),COUNT:(...a)=>fl(a).filter(isN).length,
+  COUNTIF:(r,c)=>{c=String(c);const m=c.match(/^(>=|<=|<>|>|<|=)?(.*)$/),op=m[1]||'=',t=m[2],n=Number(t.replace(',','.'));return fl([r]).filter(v=>{const x=isN(v)&&!isNaN(n)?v:String(v).toLowerCase(),y=isN(v)&&!isNaN(n)?n:t.toLowerCase();return op=='>'?x>y:op=='<'?x<y:op=='>='?x>=y:op=='<='?x<=y:op=='<>'?x!=y:x==y}).length}};
+ if(((e.replace(/§\d+§|"(?:[^"\\]|\\.)*"/g,'')).match(/[A-Za-z_]\w*/g)||[]).some(t=>!(t in F)))return '#NÁZOV?';
+ e=e.replace(/§(\d+)§/g,(m,i)=>JSON.stringify(strs[i]));const v=Function(...Object.keys(F),'return ('+e+')')(...Object.values(F));return isN(v)?v:typeof v=='string'?v:'#CHYBA'}catch(x){return '#CHYBA'}}
+const shiftF=(f,dr)=>f.replace(/(\$?)([A-H])(\$?)(\d+)/g,(m,a,c,b2,r)=>a+c+b2+(b2?r:(+r+dr)));
+function sheet(b,cells,R,C,edit){const raw={...cells};let sel=edit[0];
+ const val=(a,d=0)=>{const r=raw[a];if(r==null||r==='')return '';if(isN(r))return r;if(String(r)[0]=='=')return d>30?'#CYKLUS':evalF(String(r),x=>val(x,d+1));const n=Number(String(r).replace(',','.'));return isNaN(n)?r:n};
+ const ad=el('span',{class:'ad'}),fi=el('input',{class:'inp tin',style:'padding:9px 12px;font-size:16px',placeholder:'napíš hodnotu alebo =vzorec',autocomplete:'off',autocapitalize:'off',spellcheck:'false'}),wrap=el('div',{class:'sheetw'});
+ const commit=()=>{if(edit.includes(sel)&&fi.value!==(raw[sel]??'')){raw[sel]=fi.value.trim();draw()}};
+ fi.onkeydown=e=>{if(e.key=='Enter'){commit();const r=+sel.slice(1)+1,n=sel[0]+r;if(edit.includes(n)){sel=n;draw()}}};fi.onchange=commit;
+ const draw=()=>{ad.textContent=sel;fi.value=raw[sel]??'';fi.disabled=!edit.includes(sel);
+  wrap.innerHTML='';const t=el('table',{class:'xs'},el('tr',{},el('th',{}),[...COLS.slice(0,C)].map(c=>el('th',{},c))));
+  for(let r=1;r<=R;r++)t.append(el('tr',{},el('th',{},String(r)),[...COLS.slice(0,C)].map(c=>{const a=c+r,v=val(a);return el('td',{class:(edit.includes(a)?'ed ':'')+(a==sel?'sel ':'')+(String(v)[0]=='#'?'err':''),onclick:()=>{commit();sel=a;draw();if(edit.includes(a))fi.focus()}},fmtN(v))})));wrap.append(t)};
+ const api={raw,val,draw,get sel(){return sel},
+  fill(){commit();const f=raw[sel];if(!f||!edit.includes(sel))return;const c=sel[0];let r=+sel.slice(1)+1;while(edit.includes(c+r)&&r<=R){raw[c+r]=f[0]=='='?shiftF(f,r-+sel.slice(1)):f;r++}draw()}};
+ b.append(el('div',{class:'fbar'},ad,fi,el('button',{class:'tbtn',onclick:commit},'✓')),wrap);draw();return api}
+const near=(a,b2)=>isN(a)&&Math.abs(a-b2)<0.006;
+function dtab(head,rows,onRow){return el('div',{class:'sheetw'},el('table',{class:'xs'},el('tr',{},head.map(h=>el('th',{},h))),rows.map((r,i)=>{const tr=el('tr',{class:onRow?'pick':''},r.map(c=>el('td',{},c)));if(onRow)tr.onclick=()=>onRow(i,tr);return tr})))}
+Object.assign(T,{
+cellFind:{n:'Adresa bunky',run(b,ok){const J=S.lvl=='junior',R=J?4:6,Cn=J?4:6,E=shuffle(['🔑','🎩','🐾','📱','🕯️','🧤','🔦','📷','✉️','🧲']).slice(0,J?5:8);
+ const pos=shuffle([...Array(R*Cn).keys()]).slice(0,E.length),cell={};E.forEach((e,i)=>cell[COLS[pos[i]%Cn]+(Math.floor(pos[i]/Cn)+1)]=e);
+ const all=[];for(let r=1;r<=R;r++)for(let c=0;c<Cn;c++)all.push(COLS[c]+r);const ad=Object.keys(cell);
+ const Q=(J?['what','tap','what','tap']:['what','tap','name','tap','name']).map(t=>t=='what'?{t,a:pick(ad)}:t=='tap'?{t,a:pick(all)}:{t,a:pick(ad)});
+ let k=0;const q=el('div'),fb=el('div',{class:'fb'}),g=el('div',{class:'sheetw'});
+ const tb=el('table',{class:'xs grid2'},el('tr',{},el('th',{}),[...COLS.slice(0,Cn)].map(c=>el('th',{},c))));
+ for(let r=1;r<=R;r++)tb.append(el('tr',{},el('th',{},String(r)),[...COLS.slice(0,Cn)].map(c=>{const a=c+r,td=el('td',{onclick:()=>{const x=Q[k];if(!x||x.t!='tap')return;if(a==x.a){td.classList.add('hit');beep(1);nx()}else{shk(td);beep(0);lose(fb,`To je ${a}. Najprv nájdi stĺpec ${x.a[0]} (hore), potom riadok ${x.a.slice(1)} (vľavo).`)}}},cell[a]||'');return td})));g.append(tb);
+ const nx=()=>{fb.textContent='';fb.className='fb';tb.querySelectorAll('.hit').forEach(x=>setTimeout(()=>x.classList.remove('hit'),500));if(++k==Q.length){win(fb,'Adresy buniek ovládaš!',ok);q.innerHTML='';return}show()};
+ const show=()=>{const x=Q[k];q.innerHTML=`<p class="qline"><span class="eyebrow">${k+1} / ${Q.length}</span></p>`;const p=q.firstChild;
+  if(x.t=='what'){p.append(`Čo je v bunke ${x.a}?`);q.append(el('div',{class:'tiles'},shuffle([cell[x.a],...shuffle(E.filter(e=>e!=cell[x.a])).slice(0,3)]).map(e=>{const t=el('button',{class:'tile',onclick:()=>{if(e==cell[x.a]){beep(1);nx()}else{shk(t);beep(0)}}},e);return t})))}
+  else if(x.t=='tap')p.append(`Ťukni na bunku ${x.a}.`);
+  else{p.append(`Napíš adresu bunky, v ktorej je ${cell[x.a]}.`);ask(q,x.a,{hint:'Najprv písmeno stĺpca, potom číslo riadka – napr. B4.',ph:'napr. B4',ok:()=>setTimeout(nx,500)})}};
+ b.append(el('p',{html:tx(J?'Zošit je rozdelený na políčka – [[bunka|bunky]]. Stĺpce majú písmená (A, B, C…), riadky čísla. Spolu tvoria [[adresa bunky|adresu]], napr. B3.':'Každá [[bunka]] má [[adresa bunky|adresu]]: písmeno stĺpca a číslo riadka. Tieň si do tabuľky zapisoval, kde ukryl dôkazy.')}),g,q,fb);show()}},
+tabFill:{n:'Spočítaj dôkazy',run(b,ok){counts(b,ok,false)}},
+freq:{n:'Frekvenčná tabuľka',run(b,ok){counts(b,ok,true)}},
+tabLookup:{n:'Kto to bol?',run(b,ok){let rows,Q;for(let t=0;t<80;t++){rows=shuffle(['Ema','Jakub','Sofia','Tomáš','Nina','Adam']).slice(0,5).map(n=>({n,h:Math.random()<.5,d:Math.random()<.5,c:pick(['🟤','⚫','🔵'])}));
+  const P=[[r=>r.h&&r.d,'Kto má klobúk 🎩 aj psa 🐕?'],[r=>r.d&&!r.h,'Kto má psa 🐕, ale nemá klobúk 🎩?'],[r=>!r.h&&!r.d,'Kto nemá klobúk ani psa?'],[r=>r.h&&!r.d,'Kto má klobúk 🎩, ale nemá psa?'],...['🟤','⚫','🔵'].map(c=>[r=>r.c==c&&r.h,`Kto má kabát ${c} a klobúk 🎩?`]),...['🟤','⚫','🔵'].map(c=>[r=>r.c==c&&!r.d,`Kto má kabát ${c} a nemá psa?`])];
+  Q=shuffle(P.filter(([f])=>rows.filter(f).length==1)).slice(0,3);if(Q.length==3)break}
+ let k=0;const q=el('p',{class:'qline'}),fb=el('div',{class:'fb'});const show=()=>{q.innerHTML=`<span class="eyebrow">${k+1} / 3</span>${Q[k][1]}`};
+ b.append(el('p',{html:tx('V [[tabuľka|tabuľke]] sú ľudia, ktorí boli večer v parku. ✔ znamená áno, ✖ nie. Prečítaj otázku a ťukni na správneho človeka.')}),q,
+  dtab(['Meno','🎩 klobúk','🐕 pes','🧥 kabát'],rows.map(r=>[r.n,r.h?'✔':'✖',r.d?'✔':'✖',r.c]),(i,tr)=>{if(k>=3)return;if(Q[k][0](rows[i])){beep(1);tr.classList.add('hit');setTimeout(()=>tr.classList.remove('hit'),500);if(++k==3)win(fb,'Výborne, z tabuľky vieš čítať!',ok);else show()}else{shk(tr);beep(0)}}),
+  el('button',{class:'btn sm ghost say',onclick:()=>Q[k]&&speak(Q[k][1]),html:ic('vol')+' Prečítať'}),fb);show()}},
+sortT:{n:'Zoraď tabuľku',run(b,ok){const used=new Set(),rows=shuffle(['Ema','Jakub','Sofia','Tomáš','Nina','Adam']).map(n=>{let t;do t=rnd(1140,1379);while(used.has(t));used.add(t);let v;do v=rnd(150,195);while(used.has('v'+v));used.add('v'+v);return{n,t,v}});
+ const tm=t=>`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`,Q=shuffle([['Kto odišiel z kaviarne ako posledný?','t',-1],['Kto odišiel ako prvý?','t',1],['Kto je najvyšší?','v',-1],['Kto je najnižší?','v',1]]).slice(0,2);
+ let k=0,sk=null,dir=1;const q=el('p',{class:'qline'}),fb=el('div',{class:'fb'}),box=el('div');
+ const ans=()=>[...rows].sort((a,c)=>(a[Q[k][1]]-c[Q[k][1]])*Q[k][2])[0].n;
+ const draw=()=>{const R=sk?[...rows].sort((a,c)=>(a[sk]-c[sk])*dir):rows;box.innerHTML='';
+  const h=(l,key)=>el('button',{class:'thb',onclick:()=>{dir=sk==key?-dir:1;sk=key;draw()}},l+(sk==key?(dir>0?' ▲':' ▼'):' ⇅'));
+  box.append(el('div',{class:'sheetw'},el('table',{class:'xs'},el('tr',{},el('th',{},'Meno'),el('th',{},h('Odchod','t')),el('th',{},h('Výška (cm)','v'))),
+   R.map(r=>{const tr=el('tr',{class:'pick',onclick:()=>{if(k>=Q.length)return;if(r.n==ans()){beep(1);if(++k==Q.length)win(fb,'Zoradená tabuľka odpovie hneď – stačí pozrieť prvý riadok. Pri 500 ľuďoch by si inak hľadal veľmi dlho.',ok);else{fb.textContent='';fb.className='fb';show()}}else{shk(tr);lose(fb,'To nie je on. Zoraď tabuľku ťuknutím na hlavičku stĺpca – ▲ vzostupne, ▼ zostupne.')}}},el('td',{},r.n),el('td',{},tm(r.t)),el('td',{},String(r.v)));return tr}))))};
+ const show=()=>{q.innerHTML=`<span class="eyebrow">${k+1} / ${Q.length}</span>${Q[k][0]}`};
+ b.append(el('p',{html:tx('Svedkovia z kaviarne. Ťuknutím na hlavičku stĺpca tabuľku [[zoradenie|zoradíš]]. Potom ťukni na meno, ktoré odpovedá na otázku.')}),q,box,fb);show();draw()}},
+filter:{n:'Filter podozrivých',run(b,ok){const V={k:['sivý','čierny','hnedý'],h:['áno','nie'],v:['malý','stredný','vysoký'],a:['áno','nie']},L={k:'Kabát',h:'Klobúk',v:'Postava',a:'Auto'};
+ const tg={k:pick(V.k),h:pick(V.h),v:pick(V.v)},m=r=>r.k==tg.k&&r.h==tg.h&&r.v==tg.v;
+ const rows=shuffle(['Ema','Jakub','Sofia','Tomáš','Nina','Adam','Lea','Filip']).map((n,i)=>{let r;do r={n,k:pick(V.k),h:pick(V.h),v:pick(V.v),a:pick(V.a)};while(i&&m(r));if(!i)Object.assign(r,tg);return r});const cul=rows[0].n;shuffle(rows);rows.sort(()=>Math.random()-.5);
+ const f={k:'',h:'',v:'',a:''},fb=el('div',{class:'fb'}),box=el('div'),cnt=el('span',{class:'mut'});
+ const draw=()=>{const R=rows.filter(r=>Object.keys(f).every(c=>!f[c]||r[c]==f[c]));cnt.textContent=`Zobrazené: ${R.length} z ${rows.length} riadkov`;box.innerHTML='';
+  box.append(el('div',{class:'sheetw'},el('table',{class:'xs'},el('tr',{},el('th',{},'Meno'),Object.keys(L).map(c=>el('th',{},el('select',{class:'fsel'+(f[c]?' on':''),onchange:e=>{f[c]=e.target.value;draw()}},el('option',{value:''},L[c]+' ▾'),V[c].map(o=>{const x=el('option',{value:o},o);if(f[c]==o)x.selected=true;return x}))))),
+   R.map(r=>{const tr=el('tr',{class:'pick',onclick:()=>{if(r.n==cul)win(fb,'Tieň je usvedčený! Filter údaje nezmaže – iba skryje riadky, ktoré nespĺňajú podmienku.',ok);else{shk(tr);lose(fb,'Tento človek nesedí s výpoveďou. Nastav filter vo všetkých stĺpcoch, o ktorých svedok hovoril.')}}},el('td',{},r.n),Object.keys(L).map(c=>el('td',{},r[c])));return tr}))))};
+ b.append(el('p',{html:tx('Svedok si pamätá: „Mal <b>'+tg.k+'</b> kabát, '+(tg.h=='áno'?'<b>klobúk</b>':'<b>bez klobúka</b>')+' a bol <b>'+tg.v+'</b>.“ O aute nevie nič. Pomocou [[filter|filtra]] v hlavičke tabuľky nájdi jediného človeka, ktorý sedí.')}),cnt,box,fb);draw()}},
+formula:{n:'Účet z kaviarne',run(b,ok){const IT=shuffle([['káva',2.4],['čaj',1.9],['koláč',3.2],['limonáda',2.8],['sendvič',4.5],['zákusok',3.6]]).slice(0,4),c={A1:'Položka',B1:'Počet',C1:'Cena/ks',D1:'Spolu',A6:'SPOLU'};
+ IT.forEach(([n,p],i)=>{c['A'+(i+2)]=n;c['B'+(i+2)]=rnd(2,4);c['C'+(i+2)]=p});const fb=el('div',{class:'fb'});
+ b.append(el('p',{html:tx('Tieň tvrdí, že v kaviarni platil iba za seba. Overíme to. Do stĺpca D vypočítaj cenu každej položky [[vzorec|vzorcom]] a do D6 celkovú sumu [[funkcia|funkciou]]. Čísla neopisuj – vzorec musí začínať znakom =.')}));
+ const s=sheet(b,c,6,4,['D2','D3','D4','D5','D6']);
+ b.append(el('div',{class:'tb'},el('button',{class:'tbtn',onclick:()=>s.fill()},'⬇ Vyplniť nadol'),el('button',{class:'btn sm',onclick:()=>{let bad=0;for(let r=2;r<=5;r++)if(String(s.raw['D'+r]||'')[0]!='='||!near(s.val('D'+r),c['B'+r]*c['C'+r]))bad++;
+   const tot=IT.reduce((x,_,i)=>x+c['B'+(i+2)]*c['C'+(i+2)],0);if(String(s.raw.D6||'')[0]!='='||!near(s.val('D6'),tot))bad++;
+   const pcs=IT.reduce((x,_,i)=>x+c['B'+(i+2)],0);bad?lose(fb,`Nesedí ${bad} ${bad==1?'bunka':'bunky'}. Skontroluj, či každý vzorec začína = a odkazuje na správne bunky.`):win(fb,`Účet ${fmtN(tot)} € za ${pcs} položiek – na jedného človeka je to priveľa. Tieň nebol v kaviarni sám!`,ok)}},'Overiť')),
+  el('details',{class:'hint'},el('summary',{},'Stopa'),el('p',{html:'Do D2 napíš <b>=B2*C2</b> a potvrď Enterom. Vyber D2 a ťukni <b>Vyplniť nadol</b> – vzorec sa skopíruje a adresy sa posunú. Do D6 napíš <b>=SUM(D2:D5)</b>.'})),fb)}},
+absRef:{n:'Absolútna adresa',run(b,ok){const rate=pick([1.2,1.5,2,2.5]),c={A1:'Cena za hodinu',B1:rate,A2:'Hodiny',B2:'Platba (€)'},fb=el('div',{class:'fb'});for(let r=3;r<=7;r++)c['A'+r]=rnd(1,6);
+ b.append(el('p',{html:tx('Na parkovisku pri prístave stálo päť áut. V B1 je cena za hodinu. Vypočítaj platbu každého auta. Napíš vzorec iba do B3 a skopíruj ho nadol – a sleduj, čo sa stane. Pomôže ti [[absolútna adresa]].')}));
+ const s=sheet(b,c,7,2,['B3','B4','B5','B6','B7']);
+ b.append(el('div',{class:'tb'},el('button',{class:'tbtn',onclick:()=>s.fill()},'⬇ Vyplniť nadol'),el('button',{class:'btn sm',onclick:()=>{let bad=0;for(let r=3;r<=7;r++)if(String(s.raw['B'+r]||'')[0]!='='||!near(s.val('B'+r),c['A'+r]*rate))bad++;
+   if(!bad)win(fb,'Presne tak. $B$1 pri kopírovaní ostane $B$1, kým relatívna adresa B1 by sa posunula na B2, B3… a výsledky by boli nesprávne.',ok);
+   else lose(fb,/(^|[^$])B1\b/.test(String(s.raw.B3||''))&&!/\$B\$?1|B\$1/.test(String(s.raw.B3||''))?'Pri kopírovaní sa adresa B1 posunula na B2, B3… Uzamkni ju znakom $: =A3*$B$1':`Nesedí ${bad} z 5. Vzorec musí začínať = a použiť cenu z B1.`)}},'Overiť')),fb)}},
+funcs:{n:'Štatistika príchodov',run(b,ok){const used=new Set(),c={A1:'Meno',B1:'Príchod',D1:'Čo zisťujem',E1:'Výsledok',D2:'najskôr',D3:'najneskôr',D4:'priemer',D5:'po 20:30 (počet)'},fb=el('div',{class:'fb'});
+ shuffle(['Ema','Jakub','Sofia','Tomáš','Nina','Adam','Lea']).forEach((n,i)=>{let t;do t=rnd(0,59);while(used.has(t));used.add(t);c['A'+(i+2)]=n;c['B'+(i+2)]=t});
+ const v=[...used],T2=[Math.min(...v),Math.max(...v),v.reduce((x,y)=>x+y,0)/v.length,v.filter(x=>x>30).length];
+ b.append(el('p',{html:tx('V stĺpci B je, koľko minút po 20:00 prišiel každý svedok. Do E2 až E5 doplň výsledky pomocou [[funkcia|funkcií]] MIN, MAX, AVERAGE a COUNTIF. Odpoveď musí byť vzorec.')}));
+ const s=sheet(b,c,8,5,['E2','E3','E4','E5']);
+ b.append(el('div',{class:'tb'},el('button',{class:'btn sm',onclick:()=>{const bad=[2,3,4,5].filter((r,i)=>String(s.raw['E'+r]||'')[0]!='='||!near(s.val('E'+r),T2[i])).length;bad?lose(fb,`Nesedí ${bad} z 4. Rozsah údajov je B2:B8.`):win(fb,'Štatistika hotová. Funkcie sa prepočítajú samy, aj keď niekto zmení čas príchodu.',ok)}},'Overiť')),
+  el('details',{class:'hint'},el('summary',{},'Stopa'),el('p',{html:'<b>=MIN(B2:B8)</b>, <b>=MAX(B2:B8)</b>, <b>=AVERAGE(B2:B8)</b>, <b>=COUNTIF(B2:B8;">30")</b>. Slovenský Excel môže namiesto AVERAGE používať PRIEMER – aplikácia pozná oboje.'})),fb)}},
+dtype:{n:'Typy údajov',run(b,ok){const A=[['0905 123 456','text'],['12:30','čas'],['15,90 €','mena'],['1. 2. 2026','dátum'],['42','číslo'],['20 %','percento'],['007','text'],['Michalovce','text']];
+ pairs(b,'Každá [[bunka]] má svoj [[typ údajov]]. Vyber pre každý údaj správny typ.',shuffle(A).slice(0,5),['číslo','text','dátum','čas','mena','percento'],'Správne. Telefónne číslo alebo kód 007 ukladaj ako text – inak tabuľka zmaže nulu na začiatku a medzery.',ok,false)}},
+chartPick:{n:'Vyber graf',run(b,ok){const A=[['Ako sa menila teplota počas noci','čiarový'],['Koľko svedkov videlo ktorú farbu auta','stĺpcový'],['Aký podiel rozpočtu polície ide na autá, ľudí a techniku','koláčový'],['Súvisí výška podozrivých s dĺžkou ich kroku?','bodový'],['Ako rástol počet zdieľaní hoaxu každú hodinu','čiarový']];
+ pairs(b,'Údaje z vyšetrovania treba ukázať na porade. Ku každej situácii vyber vhodný [[graf]].',shuffle(A).slice(0,4),['stĺpcový','čiarový','koláčový','bodový'],'Výborne. Zlý typ grafu dokáže čísla skresliť – správny ich ukáže na prvý pohľad.',ok,false)}}
+});
+function counts(b,ok,big){const C=big?shuffle([['🚗','červené'],['🚙','modré'],['🚕','žlté'],['🚐','biele'],['🚓','policajné']]).slice(0,4):shuffle([['🔑','kľúče'],['🧤','rukavice'],['📱','mobily'],['🕯️','sviečky'],['✉️','listy']]).slice(0,3);
+ const n=C.map(()=>rnd(1,big?6:4));if(big){const m=Math.max(...n);let i=n.indexOf(m);if(n.filter(x=>x==m).length>1)n[i]++}
+ const fb=el('div',{class:'fb'}),ins=C.map(()=>el('input',{class:'inp num',type:'number',inputmode:'numeric',min:0}));
+ b.append(el('p',{html:tx(big?'Svedok zapisoval autá, ktoré prešli okolo prístavu. Spočítaj ich a vyplň [[frekvenčná tabuľka|frekvenčnú tabuľku]].':'Na stole ležia dôkazy. Spočítaj, koľko je ktorých, a napíš číslo do [[tabuľka|tabuľky]].')}),
+  el('div',{class:'pile'},shuffle(C.flatMap((c,i)=>Array(n[i]).fill(c[0]))).join(' ')),
+  dtab(['Vec','Názov','Počet'],C.map((c,i)=>[c[0],c[1],ins[i]])),
+  el('div',{class:'row',style:'margin-top:10px'},el('button',{class:'btn',onclick:()=>{const bad=ins.filter((x,i)=>+x.value!==n[i]).length;if(bad)return lose(fb,`Nesedí ${bad} ${bad==1?'riadok':'riadky'}. Počítaj po jednom a odškrtávaj si.`);
+   if(!big)return win(fb,'Tabuľka je hotová!',ok);fb.innerHTML='';fb.className='fb';const m=C[n.indexOf(Math.max(...n))][1];mc(fb,{q:'Ktoré autá prešli okolo najčastejšie?',a:m,w:C.map(c=>c[1]).filter(x=>x!=m)},ok)}},'Overiť')),fb)}
+const SP3={no:'03',name:'Alibi v tabuľke',intro:['ALIBI','A1 · B2 · C3','=SUM(B2:B5)','Tabuľka je ako mapa údajov – každá bunka má adresu. Naučíš sa v nej hľadať, triediť, filtrovať a počítať tak, aby počítač pracoval za teba.'],
+story:{junior:'Stopár našiel zošit, v ktorom sú veci nakreslené do štvorčekov – je to [[tabuľka]]! Každé políčko má svoju adresu. Pomôž mu zistiť, čo v nej je.',
+ patrac:'Tieňov zošit je plný tabuliek – časy, mená, farby áut. Kto má alibi a kto klame? Údaje treba spočítať, [[zoradenie|zoradiť]] a prefiltrovať.',
+ insp:'Zaistili sme Tieňovu tabuľku výdavkov. Čísla v nej nesedia – niekto ich prepisoval ručne namiesto [[vzorec|vzorcov]]. Prepočítaj všetko správne a nájdi rozpor.'},
+tasks:{junior:['cellFind','tabFill','tabLookup'],patrac:['cellFind','freq','sortT','filter'],insp:['dtype','formula','absRef','funcs','chartPick']},
+quiz:{junior:[{q:'Tabuľka sa skladá z riadkov a…',a:'stĺpcov',w:['kruhov','obrázkov']},{q:'Bunka B3 je v stĺpci…',a:'B',w:['3','A']},{q:'Na čo je dobrá tabuľka?',a:'Údaje sú v nej prehľadne usporiadané',w:['Je pekne farebná','Dá sa z nej postaviť dom']},{q:'V ktorom riadku je bunka A2?',a:'V druhom',w:['V prvom','V treťom']}],
+ patrac:[{q:'Čo ukazuje frekvenčná tabuľka?',a:'Koľkokrát sa niečo opakuje',w:['Rýchlosť áut','Abecedný zoznam mien']},{q:'Čo urobí filter v tabuľke?',a:'Skryje riadky, ktoré nespĺňajú podmienku – nič nezmaže',w:['Zmaže nepotrebné riadky','Zoradí riadky podľa abecedy']},{q:'Zoradenie od najmenšieho po najväčšie je…',a:'vzostupné',w:['zostupné','náhodné']},()=>{const c=rnd(1,6),r=rnd(2,9),a=COLS[c-1]+r;return{q:`Bunka v ${c}. stĺpci a ${r}. riadku má adresu…`,a,w:[r+COLS[c-1],COLS[c]+r,COLS[c-1]+(r+1)]}},{q:'Ako najrýchlejšie zistíš, kto je najvyšší z 500 ľudí v tabuľke?',a:'Zoradím tabuľku podľa výšky zostupne',w:['Prečítam všetky riadky','Použijem farbu písma']}],
+ insp:[{q:'Vzorec =A1+A2 z bunky A3 skopíruješ do B3. Čo bude v B3?',a:'=B1+B2',w:['=A1+A2','=$A$1+$A$2','=B3+B4']},{q:'Čo znamená $ v adrese $B$1?',a:'Pri kopírovaní vzorca sa adresa nezmení',w:['Hodnota je v eurách','Bunka je zamknutá proti úprave']},{q:'Prečo uložiť telefónne číslo 0905… ako text?',a:'Ako číslo by stratilo nulu na začiatku a medzery',w:['Text zaberá menej miesta','Čísla sa nedajú zobraziť']},{q:'Ktorá funkcia vypočíta priemer?',a:'AVERAGE (PRIEMER)',w:['SUM','MAX','COUNT']},{q:'Aký graf ukáže podiel častí z celku?',a:'koláčový',w:['čiarový','bodový']},()=>{const v=[rnd(1,9),rnd(1,9),rnd(1,9),rnd(1,9)],s=v.reduce((x,y)=>x+y);return{q:`V A1 až A4 sú čísla ${v.join(', ')}. Aký výsledok dá =SUM(A1:A4)?`,a:String(s),w:[String(s+v[0]),String(s-v[3]),String(Math.max(...v))]}}]},
+clue:'Čísla prezradili, že Tieň v ten večer nebol sám – a že dobre vie, ako rýchlo šíriť správy. Na nástenke v meste sa práve objavil podozrivý oznam… Pokračuj na nástenke – <b>Spis 04</b>.'};
+/* ---------- SPIS 4: overovanie ---------- */
+Object.assign(G,{'hoax':'Nepravdivá alebo zavádzajúca správa, ktorá sa šíri, akoby bola pravdivá. Často straší a vyzýva na rýchle zdieľanie.','dezinformácia':'Nepravdivá informácia šírená zámerne, aby oklamala ľudí.','dôveryhodnosť':'Miera, do akej môžeme zdroju veriť: kto je autor, kedy to napísal, odkiaľ to vie, či to potvrdzujú iní.','laterálne čítanie':'Spôsob overovania profesionálov: stránku opustíš a v iných zdrojoch zisťuješ, kto za ňou stojí a či jej tvrdenia potvrdzujú iní.','informačná bublina':'Stav, keď ti algoritmus ukazuje najmä obsah, ktorý sa ti páči, a iné názory takmer nevidíš.','algoritmus sociálnej siete':'Program, ktorý vyberá, čo uvidíš. Ukazuje viac toho, na čo reaguješ – lajkuješ, pozeráš, komentuješ.','manipulácia':'Ovplyvňovanie ľudí nečestnými trikmi – strachom, falošnými autoritami, vytrhnutím z kontextu.','licencia':'Pravidlá, ako smieš cudzie dielo použiť. Napr. licencia Creative Commons dovoľuje použitie, ak uvedieš autora.','autorský zákon':'Zákon, ktorý chráni diela (texty, fotky, hudbu) a ich autorov. Cudzie dielo nesmieš vydávať za svoje.','reklama':'Platený výsledok alebo príspevok. Nemusí byť najlepšou odpoveďou – zaplatil si za to, aby si ho videl.','digitálna stopa':'Všetko, čo po tebe na internete zostane – príspevky, fotky, komentáre, lajky.'});
+function sorter(b,txt,items,cats,msg,ok){let left=items.length;const fb=el('div',{class:'fb'});
+ b.append(el('p',{html:tx(txt)}),...items.map(([t,c,e])=>{const card=el('div',{class:'srt'},el('div',{},t));card.append(el('div',{class:'row',style:'margin-top:8px'},cats.map(k=>{const x=el('button',{class:'tbtn',onclick:()=>{if(card.dataset.d)return;if(k==c){card.dataset.d=1;card.classList.add('done');x.classList.add('on');beep(1);if(e)card.append(el('div',{class:'mut',style:'margin-top:6px'},e));if(--left==0)win(fb,msg,ok)}else{shk(card);beep(0)}}},k);return x})));return card}),fb)}
+const SC='Šiframesto';
+const POSTS={patrac:[['Zaručené správy 🔥','pred 2 h',[['ŠOKUJÚCE!!! 😱 ',1,'Krik a emotikony – správa chce vyvolať strach, nie informovať.'],[`Zo ZOO v meste ${SC} údajne utiekol tiger a pohybuje sa po sídlisku. `,0],['Polícia to TAJÍ! ',1,'„Niekto to tají“ je typická veta hoaxov. Prečo by to polícia tajila?'],['Videl ho kamarát môjho bratranca. ',1,'Zdroj „z druhej ruky“ – chýba meno aj dôkaz.'],['Nechoďte von po 18:00. ',0],['ZDIEĽAJ, kým to nezmažú!!!',1,'Výzva na rýchle zdieľanie bez premýšľania.']]],
+ ['Zdravie Naj 💪','včera',[['Vedci sú v šoku! ',1,'Nadsadený titulok – „vedci v šoku“ nič konkrétne nehovorí.'],['Kto pije denne 3 litre kofoly, ',0],['nikdy neochorie. ',1,'Sľub „nikdy“ alebo „100 %“ v skutočnej vede takmer neexistuje.'],['Podľa štúdie, ktorú nikde nenájdete, ',1,'Chýba odkaz na zdroj – štúdia sa nedá overiť.'],['to funguje u každého. ',0],['Pošli ďalej 10 kamarátom!',1,'Reťazová výzva na šírenie.']]]],
+ insp:[['Nezávislé Fakty','12. 3. 2019',[['Podľa doc. MUDr. Kvetoslava Pravdu, ',1,'Titul ešte neznamená odbornosť. Over si, či taký odborník existuje a či sa venuje práve tejto téme.'],['nezávislého experta, ',0],['nová vakcína obsahuje čipy na sledovanie. ',1,'Tvrdenie bez dôkazu, ktoré je technicky nemožné.'],['Dôkazom je video, ',0],['ktoré YouTube okamžite zmazal. ',1,'„Zmazali to“ = nedá sa overiť, no vyvoláva dojem zakázanej pravdy.'],['Zdroj: ',0],['pravda-24h.info.xyz',1,'Neznáma doména bez redakcie a kontaktov.']]],
+  ['Mestský Insider','pred 1 h',[['Mesto potichu zvýši dane o 300 %. ',1,'Prehnané číslo bez zdroja – over ho v rozpočte mesta alebo v médiách.'],['Informoval o tom ',0],['anonymný zamestnanec úradu. ',1,'Anonymný zdroj sa nedá overiť.'],['Primátor odmietol reagovať, ',0],['čo dokazuje, že je to pravda. ',1,'Logická chyba – mlčanie nič nedokazuje.'],['Viac na ',0],['mesto-pravda.blogspot.com',1,'Osobný blog nie je oficiálny zdroj mesta.']]]]};
+const gbars=(v,lo,t)=>{const hi=Math.max(...v)+(lo?1:6),y=x=>130-(x-lo)/(hi-lo)*108;return `<svg viewBox="0 0 170 156" class="gr"><text x="85" y="12" text-anchor="middle" font-size="11" font-weight="700">${t}</text><line x1="30" y1="20" x2="30" y2="130" stroke="#94a3b8"/><line x1="30" y1="130" x2="165" y2="130" stroke="#94a3b8"/>${[lo,hi].map(k=>`<text x="26" y="${(y(k)+4).toFixed(1)}" text-anchor="end" font-size="10">${k}</text>`).join('')}${v.map((x,i)=>`<rect x="${50+i*60}" y="${y(x).toFixed(1)}" width="40" height="${(130-y(x)).toFixed(1)}" rx="3" fill="${i?'#f59e0b':'#3b82f6'}"/><text x="${70+i*60}" y="146" text-anchor="middle" font-size="11">${['Aneta','Boris'][i]}</text>`).join('')}</svg>`};
+Object.assign(T,{
+trueFalse:{n:'Pravda alebo výmysel?',run(b,ok){sorter(b,'Nie všetko, čo je napísané, je pravda. Rozhodni pri každej vete.',shuffle([['Slnko je hviezda.','pravda'],['Psy vedia lietať.','výmysel'],['Bratislava je hlavné mesto Slovenska.','pravda'],['Ryby žijú vo vode.','pravda'],['Mačka má osem nôh.','výmysel'],['Sneh je studený.','pravda'],['Mesiac je zo syra.','výmysel'],['V parku pri škole býva drak.','výmysel']]).slice(0,5),['pravda','výmysel'],'Výborne! Keď si nie si istý, spýtaj sa dospelého alebo si to over v knihe.',ok)}},
+safeClick:{n:'Klikneš?',run(b,ok){sorter(b,'Na internete ťa čakajú rôzne odkazy. Čo urobíš?',shuffle([['Okno bliká: „VYHRAL SI TABLET! Klikni sem!“','nekliknem','Takéto „výhry“ sú podvod.'],['Pani učiteľka poslala odkaz na školskú stránku.','kliknem'],['Neznámy hráč v hre ti pošle odkaz na „diamanty zadarmo“.','nekliknem','Neznámi ľudia v hrách často klamú.'],['Stránka chce, aby si si stiahol neznámu aplikáciu.','spýtam sa dospelého'],['Kamarát poslal čudný odkaz bez jediného slova.','spýtam sa dospelého','Kamarátovi mohol niekto ukradnúť účet.']]).slice(0,4),['kliknem','nekliknem','spýtam sa dospelého'],'Si opatrný pátrač!',ok)}},
+urlMatch:{n:'Ktorá stránka?',run(b,ok){const P=shuffle([['Chcem vedieť, či bude zajtra pršať.','pocasie'],['Hľadám knihu o dinosauroch.','kniznica'],['Kedy ide autobus do školy?','autobusy'],['Aké zvieratká sú v zoo?','zoo'],['Aký film dávajú v kine?','kino']]),Q=P.slice(0,3),dom=x=>x+'.siframesto.sk';let k=0;const box=el('div');
+ const go=()=>{box.innerHTML='';box.append(el('span',{class:'eyebrow'},`${k+1} / 3`));mc(box,{q:Q[k][0],a:dom(Q[k][1]),w:shuffle(P.filter(x=>x!=Q[k])).slice(0,2).map(x=>dom(x[1])),e:'Adresa stránky prezrádza, o čom stránka je.'},()=>{if(++k<3)setTimeout(go,700);else ok()});box.append(el('button',{class:'btn sm ghost say',onclick:()=>speak(Q[k][0]),html:ic('vol')+' Prečítať'}))};
+ b.append(el('p',{html:tx('Každá webová stránka má adresu. Z adresy často zistíš, o čom stránka je. Vyber správnu stránku.')}),box);go()}},
+hoaxSigns:{n:'Znaky hoaxu',run(b,ok){const [nm,tm,seg]=pick(POSTS[S.lvl=='insp'?'insp':'patrac']),N=seg.filter(s=>s[1]).length;let f=0;const fb=el('div',{class:'fb'}),ex=el('ul',{class:'exl'}),cnt=el('span',{class:'chip'},`Nájdené: 0 / ${N}`);
+ b.append(el('p',{html:tx(`Tento príspevok sa šíri mestom. Ťukni na všetky časti, ktoré prezrádzajú [[hoax]]. Je ich ${N}.`)}),
+  el('div',{class:'post'},el('div',{class:'ph'},el('span',{class:'pav'},nm[0]),el('div',{},el('b',{},nm),el('div',{class:'mut',style:'font-size:13px'},tm+' · 🌐'))),
+   el('div',{},seg.map(([t,fl,e])=>{const s=el('span',{class:'seg',onclick:()=>{if(s.dataset.d)return;if(fl){s.dataset.d=1;s.classList.add('flag');ex.append(el('li',{},el('b',{},'„'+t.trim()+'“ – '),e));beep(1);cnt.textContent=`Nájdené: ${++f} / ${N}`;if(f==N)win(fb,'Všetky znaky hoaxu nájdené. Takúto správu nezdieľaj – radšej ju over.',ok)}else{shk(s);beep(0);lose(fb,'Táto časť sama osebe nie je znak hoaxu.')}}},t);return s})),el('div',{class:'pf'},'👍 1,2 tis.   💬 384   ↗ 2 tis.')),cnt,ex,fb)}},
+sources:{n:'Porovnaj zdroje',run(b,ok){sorter(b,`Ľudia si posielajú správu: „V parku v meste ${SC} sa objavil vlk.“ Posúď [[dôveryhodnosť]] zdrojov.`,shuffle([[`Oficiálna stránka mesta ${SC}, 22. 10.: „Polícia preverila hlásenie – išlo o veľkého psa.“`,'dôveryhodné','Oficiálny zdroj, dátum, konkrétne zistenie.'],['Anonymný účet „Pravda_666“: 😱😱 VLK NA SÍDLISKU!!! Zdieľaj!!','pochybné','Bez mena, krik, výzva na zdieľanie.'],['Regionálne noviny, autorka J. Kováčová: rozhovor so zoológom zo ZOO.','dôveryhodné','Podpísaný autor a odborník.'],['Rozmazané video bez autora a dátumu so strašidelnou hudbou.','pochybné','Nedá sa overiť, kde a kedy vzniklo.'],['Správa v triednej skupine: „mama kamarátky to videla“.','pochybné','Informácia z tretej ruky.']]).slice(0,4),['dôveryhodné','pochybné'],'Dôveryhodný zdroj má meno, dátum a dá sa overiť. Pravdu nájdeš, keď porovnáš viac zdrojov.',ok)}},
+search:{n:'Hľadaj ako detektív',run(b,ok){const V=pick([['Kedy má mestská knižnica otvorené v sobotu?',`knižnica ${SC} otváracie hodiny`,['kedy otvárajú','knižnica','prosím kedy je v sobotu otvorená tá knižnica čo je u nás'],[`Mestská knižnica ${SC} – Otváracie hodiny`,`kniznica.siframesto.sk`,'Po – Pi 9:00 – 18:00, So 9:00 – 12:00'],'Do koľkej má knižnica otvorené v sobotu?','12:00',['18:00','9:00']],
+  ['Koľko stojí vstup na plaváreň pre žiakov?',`plaváreň ${SC} cenník žiaci`,['plávanie','koľko to stojí','najlepšia plaváreň na svete'],[`Mestská plaváreň ${SC} – Cenník`,'plavaren.siframesto.sk','Dospelí 5 €, žiaci 3 €, rodinné vstupné 12 €'],'Koľko zaplatí žiak?','3 €',['5 €','12 €']]]);
+ const box=el('div');b.append(el('p',{html:tx(`Úloha: <b>${V[0]}</b>`)}),box);
+ mc(box,{q:'1. Čo napíšeš do vyhľadávača?',a:V[1],w:V[2],e:'Krátke kľúčové slová: čo + kde + aká informácia.'},()=>{const r=el('div',{class:'card',style:'padding:12px'}),res=shuffle([[V[3][0],V[3][1],V[3][2],1,''],['Kúpte so zľavou 50 % – len dnes!','super-akcia-dnes.sk','Najlepšie ponuky v meste…',0,'Reklama'],['Diskusia: viete niekto? (2014)','forum-mesta.sk/diskusia/1832','Myslím, že asi niekedy ráno…',0,''],['Wikipédia – heslo o téme','sk.wikipedia.org','Všeobecný popis, žiadne aktuálne údaje mesta…',0,'']]);
+  r.append(el('p',{class:'qline',style:'margin:0 0 6px'},'2. Ťukni na výsledok, ktorý najlepšie odpovie.'),...res.map(([t,u,s,c,ad])=>{const x=el('div',{class:'sr',onclick:()=>{if(r.dataset.d)return;if(c){r.dataset.d=1;x.classList.add('ok');beep(1);const q=el('div');r.append(q);mc(q,{q:'3. '+V[4],a:V[5],w:V[6]},ok)}else{shk(x);beep(0);x.append(el('div',{class:'mut',style:'font-size:13px'},ad?'Reklama – niekto zaplatil, aby si ju videl.':'Tento výsledok neobsahuje aktuálnu odpoveď.'))}}},ad?el('span',{class:'adb'},ad):'',el('div',{class:'su'},u),el('div',{class:'st2'},t),el('div',{class:'mut',style:'font-size:14px'},s));return x}));box.append(r)})}},
+citeSrc:{n:'Smiem to použiť?',run(b,ok){sorter(b,'Robíš projekt o meste. Čo smieš urobiť podľa [[autorský zákon|autorského zákona]]?',shuffle([['Do referátu skopírujem celý článok a podpíšem sa pod neho.','nesmiem','Je to cudzie dielo – plagiát.'],['Použijem fotku s [[licencia|licenciou]] Creative Commons a napíšem meno autora.'.replace(/\[\[licencia\|licenciou\]\]/,'licenciou'),'smiem'],['Použijem fotku, ktorú som sám odfotil.','smiem'],['Stiahnem pieseň a dám ju do videa na YouTube bez povolenia.','nesmiem','Hudba má autorské práva.'],['Odcitujem krátku vetu z knihy a uvediem autora a názov.','smiem'],['Text mi napísala AI a vydám ho za vlastný bez zmienky.','nesmiem','Treba priznať, že si použil AI a na čo.']]).slice(0,5),['smiem','nesmiem'],'Cudzia práca patrí autorovi. Keď ju použiješ, vždy uveď zdroj.',ok)}},
+lateral:{n:'Over ako fact-checker',run(b,ok){const A=[['Vyhľadám, kto stránku prevádzkuje a čo o nej píšu iní.',1],['Nájdem tú istú informáciu v nezávislých zdrojoch (lekári, médiá).',1],['Skontrolujem autora a dátum článku.',1],['Prečítam celú stránku – vyzerá profesionálne.',0],['Pozriem, koľko lajkov má článok.',0],['Uverím – v názve je slovo „inštitút“.',0]],sel=new Set(),fb=el('div',{class:'fb'});
+ b.append(el('p',{html:tx('Narazil si na stránku <b>Inštitút zdravej pravdy</b> s článkom „Citrónová voda vylieči chrípku za 1 deň“. Ktoré 3 kroky urobí profesionálny overovateľ ako prvé? Pomôže ti [[laterálne čítanie]].')}),
+  el('div',{},shuffle(A).map(([t,c])=>{const x=el('button',{class:'opt',onclick:()=>{sel.has(t)?sel.delete(t):sel.add(t);x.classList.toggle('pk')}},t);return x})),
+  el('div',{class:'row',style:'margin-top:10px'},el('button',{class:'btn',onclick:()=>{const g=A.filter(a=>a[1]).every(a=>sel.has(a[0]))&&sel.size==3;g?win(fb,'Presne tak. Profesionáli stránku opustia a overujú ju zvonku – vzhľad stránky ani lajky nič nedokazujú.',ok):lose(fb,'Ešte nie. Vyber práve 3 kroky, ktoré overujú zdroj zvonku, nie podľa jeho vzhľadu.')}},'Overiť')),fb)}},
+manip:{n:'Manipulatívne techniky',run(b,ok){const A=[['„Ak to nepodpíšeš, tvoja rodina bude v nebezpečenstve.“','apel na strach'],['„Známy herec odporúča tento liek – musí byť dobrý.“','falošná autorita'],['Video ukazuje 3 sekundy z hodinovej debaty, v ktorej politik povedal opak.','vytrhnutie z kontextu'],['„Buď si s nami, alebo si proti nám.“','falošná dilema'],['„Banda zlodejov opäť okradla poctivých ľudí.“','citovo zafarbené slová'],['„Počet krádeží stúpol o 100 %!“ (z 1 na 2 prípady)','zavádzajúca štatistika']];
+ pairs(b,'Tieň používa triky [[manipulácia|manipulácie]]. Pomenuj techniku pri každom príklade.',shuffle(A).slice(0,4),A.map(x=>x[1]),'Keď techniku pomenuješ, prestane na teba fungovať.',ok,false)}},
+graphLie:{n:'Zavádzajúci graf',run(b,ok){const a=rnd(96,99),c=a+rnd(2,4),pct=Math.round((c-a)/a*100),lo=a-2,fb=el('div',{class:'fb'}),q=el('div');
+ b.append(el('p',{html:tx(`Tieň zverejnil graf ankety: Aneta ${a} hlasov, Boris ${c} hlasov. Porovnaj ho s poctivým grafom.`)}),el('div',{class:'grs'},el('div',{html:gbars([a,c],lo,'Graf 1')}),el('div',{html:gbars([a,c],0,'Graf 2')})),q,fb);
+ mc(q,{q:'Ktorý graf skresľuje?',a:'Graf 1 – os nezačína od nuly',w:['Graf 2 – stĺpce sú takmer rovnaké','Oba sú poctivé']},()=>{const q2=el('div');q.append(q2);const vis=Math.round(((c-lo)/(a-lo)-1)*100);mc(q2,{q:'O koľko percent má Boris naozaj viac hlasov?',a:`asi o ${pct} %`,w:[`asi o ${vis} %`,`asi o ${c-a} 0 %`.replace(' 0','0'),'o 50 %'].filter(x=>x!=`asi o ${pct} %`),e:`(${c} − ${a}) : ${a} ≈ ${pct} %. Graf 1 však vyzerá, akoby mal Boris viac ako dvojnásobok.`},ok)})}},
+bubble:{n:'Informačná bublina',run(b,ok){const TP=[['⚽','šport',['Finále ligy rozhodli penalty','Nový rekord v behu na 100 m','Tréning ako profík']],['🎮','hry',['Nová hra trhá rekordy','Tipy na posledný level','Turnaj v e-športe']],['🔬','veda',['Sonda pristála na Marse','Ako vzniká dúha','Nový druh žaby v pralese']],['🎵','hudba',['Koncert roka vypredaný','Nový klip za 1 deň 1 mil.','Ako sa učiť na gitaru']]];
+ const lk={},fb=el('div',{class:'fb'}),feed=el('div'),bar=el('div',{class:'mix'}),q=el('div');let n=0,phase=1;
+ const post=(t,i)=>{const[e,nm,tt]=TP[t];const x=el('div',{class:'srt fp'},el('span',{},e+' '),el('span',{},tt[i%3]),phase==1?el('button',{class:'tbtn',style:'margin-left:auto',onclick:()=>{if(x.dataset.l)return;x.dataset.l=1;x.lastChild.classList.add('on');lk[t]=(lk[t]||0)+1;beep(1);if(++n==3){phase=2;refresh()}}},'❤'):'');return x};
+ const refresh=()=>{feed.innerHTML='';const w=TP.map((_,t)=>Math.pow((lk[t]||0)+.15,3)),W=w.reduce((x,y)=>x+y),cnt=[0,0,0,0];
+  for(let i=0;i<10;i++){let r=Math.random()*W,t=0;while(r>w[t]){r-=w[t];t++}cnt[t]++;feed.append(post(t,i))}
+  bar.innerHTML=cnt.map((c2,t)=>c2?`<span style="flex:${c2}" title="${TP[t][1]}">${TP[t][0]} ${c2}</span>`:'').join('');
+  const miss=TP.filter((_,t)=>!lk[t]).map(x=>x[1]).join(', ');q.innerHTML='';mc(q,{q:`Témy, ktorým si nedal ❤ (${miss}), z feedu takmer zmizli. Prečo?`,a:'Algoritmus ukazuje to, na čo reaguješ – vzniká informačná bublina',w:['Iné témy prestali existovať','Je to náhoda','Sieť nemá iné príspevky']},()=>win(fb,'Bublinu prerazíš, keď si zámerne vyhľadáš iné zdroje a názory.',ok))};
+ b.append(el('p',{html:tx('Toto je tvoj nový feed. Daj ❤ trom príspevkom, ktoré ťa najviac zaujímajú, a sleduj, čo urobí [[algoritmus sociálnej siete]].')}),bar,feed,q,fb);
+ shuffle([0,1,2,3,0,1,2,3]).forEach((t,i)=>feed.append(post(t,i)))}}
+});
+const SP4={no:'04',name:'Hoax na nástenke',intro:['ŠOK!!! ZDIEĽAJ!','kto? kedy? odkiaľ?','✔ OVERENÉ','Nie všetko, čo vidíš na internete, je pravda. Naučíš sa spoznať hoax, porovnať zdroje a nenaletieť manipulácii.'],
+story:{junior:'Na nástenke pri škole visí lístok: „V parku býva drak!“ Je to pravda? Stopár vraví: nie všetko, čo je napísané, je pravda. Poďme to spolu overiť.',
+ patrac:'Mestom sa šíri správa, že v parku býva vlk. Ľudia sa boja a zdieľajú ju ďalej. Za správou je Tieň. Nauč sa spoznať [[hoax]] a zisti, ktorým zdrojom môžeš veriť.',
+ insp:'Tieň nevymýšľa hlúpe hoaxy – jeho správy vyzerajú dôveryhodne. Pracuje s [[manipulácia|manipuláciou]], grafmi a algoritmami sociálnych sietí. Nauč sa overovať ako profesionálny fact-checker.'},
+tasks:{junior:['trueFalse','urlMatch','safeClick'],patrac:['hoaxSigns','sources','search','citeSrc'],insp:['hoaxSigns','lateral','manip','graphLie','bubble']},
+quiz:{junior:[{q:'Čo urobíš, keď nevieš, či je správa pravdivá?',a:'Spýtam sa dospelého alebo si to overím',w:['Hneď ju pošlem kamarátom','Uverím jej']},{q:'Podľa čoho spoznáš, o čom je stránka kino.siframesto.sk?',a:'Podľa adresy – je v nej slovo kino',w:['Podľa farby','Nedá sa to zistiť']},{q:'Okno píše: „Vyhral si mobil!“ Čo urobíš?',a:'Zatvorím ho a nekliknem',w:['Kliknem, chcem mobil','Napíšem tam svoje meno']},{q:'Je všetko na internete pravda?',a:'Nie, niekedy ľudia píšu výmysly',w:['Áno, vždy','Áno, ak je to farebné']}],
+ patrac:[{q:'Čo je hoax?',a:'Nepravdivá správa, ktorá sa šíri ako pravdivá',w:['Druh počítačovej hry','Oficiálna správa polície']},{q:'Prečo porovnávať viac zdrojov?',a:'Jeden zdroj sa môže mýliť alebo klamať',w:['Aby som mal viac lajkov','Nie je to potrebné']},{q:'Výsledok vyhľadávania s označením „Reklama“ je…',a:'platený – nemusí byť najlepšou odpoveďou',w:['vždy najdôveryhodnejší','overený políciou']},{q:'Smieš dať do referátu cudzí obrázok?',a:'Áno, ak to licencia dovoľuje a uvedieš autora a zdroj',w:['Áno, vždy','Nie, nikdy']},{q:'Ktoré slová často prezradia hoax?',a:'„ŠOK“, „tají sa to“, „zdieľaj, kým to nezmažú“',w:['„podľa údajov úradu“','„autorka článku“']}],
+ insp:[{q:'Čo je laterálne čítanie?',a:'Opustím stránku a overujem ju z iných zdrojov',w:['Čítanie stránky zboku','Čítanie iba nadpisov']},{q:'Čo je informačná bublina?',a:'Algoritmus mi ukazuje najmä to, s čím súhlasím',w:['Okno s reklamou','Druh vírusu']},{q:'Graf má os y od 95 do 100. Prečo je to podozrivé?',a:'Malé rozdiely vyzerajú obrovské',w:['Čísla sú príliš veľké','Nie je to podozrivé']},{q:'Čo je digitálna stopa?',a:'Všetko, čo po mne na internete zostane',w:['Odtlačok prsta na displeji','Heslo k účtu']},{q:'Ktorý zdroj je pri zdravotnej informácii najspoľahlivejší?',a:'Odborná inštitúcia alebo lekár s overiteľným menom a zdrojmi',w:['Influencer s miliónom sledovateľov','Anonymný komentár']}]},
+clue:'Tieňova falošná správa sa rozpadla. V jeho počítači sme však našli niečo nebezpečnejšie – výpoveď svedka, ktorý vôbec neexistuje. Napísala ju umelá inteligencia… Pokračuj na nástenke – <b>Spis 05</b>.'};
+/* ---------- SPIS 5: AI ---------- */
+Object.assign(G,{'umelá inteligencia':'AI – program, ktorý sa učí z údajov rozpoznávať vzory a podľa nich odpovedá, triedi alebo tvorí. Nemá vlastné vedomie ani istotu, že má pravdu.','robot':'Stroj, ktorý vníma okolie senzormi a sám vykonáva činnosti.','senzor':'Súčiastka, ktorá zachytáva informácie z okolia – svetlo, zvuk, dotyk, teplotu, polohu.','strojové učenie':'Spôsob, ako sa AI učí: namiesto pravidiel od programátora dostane veľa príkladov a sama v nich hľadá vzory.','tréningové dáta':'Príklady, z ktorých sa AI učí. Musia byť správne, je ich treba veľa a musia byť rozmanité.','testovacie dáta':'Príklady, ktoré AI pri učení nevidela. Podľa nich zistíme, ako dobre funguje na nových údajoch.','zaujatosť':'Skreslenie (bias). Keď sú tréningové dáta jednostranné, AI sa naučí nesprávne alebo nespravodlivé pravidlá.','prompt':'Zadanie pre AI. Čím jasnejšie povieš čo, pre koho, v akom rozsahu a forme, tým lepšia odpoveď.','halucinácia':'Keď AI s istotou tvrdí nepravdu – vymyslí fakt, číslo, citát alebo zdroj.','deepfake':'Falošné video, fotka alebo hlas vytvorené AI tak, aby vyzerali ako skutočný človek.','LLM':'Veľký jazykový model (napr. ChatGPT, Claude, Gemini). Píše tak, že vyberá pravdepodobné ďalšie slová podľa textov, z ktorých sa učil.'});
+const CH=(q,segs)=>el('div',{class:'chat'},el('div',{class:'cq'},q),el('div',{class:'ca'},el('b',{},'🤖 AI asistent'),el('div',{},segs)));
+Object.assign(T,{
+aiOrNot:{n:'Je to AI?',run(b,ok){sorter(b,'Kde sa skrýva [[umelá inteligencia]]? AI sa učí z príkladov rozpoznávať veci. Obyčajný stroj iba robí, čo má nastavené.',shuffle([['Mobil sa odomkne, keď spozná tvoju tvár.','AI'],['Obyčajná kalkulačka sčíta 2 + 3.','nie je AI'],['Aplikácia z fotky spozná, aká je to kvetina.','AI'],['Vypínač zažne svetlo.','nie je AI'],['Hlasový asistent rozumie, čo mu povieš.','AI'],['Budík zvoní o 7:00.','nie je AI'],['Prekladač preloží vetu do angličtiny.','AI'],['Mikrovlnka hreje 2 minúty.','nie je AI']]).slice(0,5),['AI','nie je AI'],'Výborne! AI je všade okolo nás – v mobile, v prekladači aj v hrách.',ok)}},
+senzor:{n:'Zmysly robota',run(b,ok){const P=shuffle([['Ako robot zistí, že je tma?','svetelný senzor'],['Ako robot zistí, že niekto zatlieskal?','mikrofón'],['Ako robot zistí, že do niečoho narazil?','dotykový senzor'],['Ako robot vidí tvár?','kamera'],['Ako robot zistí, že je v izbe teplo?','teplomer']]).slice(0,3),O=['svetelný senzor','mikrofón','dotykový senzor','kamera','teplomer'];let k=0;const box=el('div');
+ const go=()=>{box.innerHTML='';box.append(el('span',{class:'eyebrow'},`${k+1} / 3`));mc(box,{q:P[k][0],a:P[k][1],w:shuffle(O.filter(x=>x!=P[k][1])).slice(0,2)},()=>{if(++k<3)setTimeout(go,700);else ok()});box.append(el('button',{class:'btn sm ghost say',onclick:()=>speak(P[k][0]),html:ic('vol')+' Prečítať'}))};
+ b.append(el('p',{html:tx('[[robot|Robot]] nemá oči ani uši. Okolie vníma [[senzor|senzormi]]. Pomôž Stopárovi vybrať správny senzor.')}),box);go()}},
+trainJ:{n:'Nauč robota',run(b,ok){const F=[['🍎','ovocie'],['🍌','ovocie'],['🍐','ovocie'],['🍇','ovocie'],['🍓','ovocie'],['🍒','ovocie'],['🥕','zelenina'],['🥦','zelenina'],['🥒','zelenina'],['🌽','zelenina'],['🥔','zelenina'],['🧅','zelenina']];
+ const fr=shuffle(F.filter(x=>x[1]=='ovocie')),vg=shuffle(F.filter(x=>x[1]=='zelenina')),tr=shuffle([...fr.slice(0,3),...vg.slice(0,3)]),te=shuffle([...fr.slice(3,5),vg[3]]),lab={};const fb=el('div',{class:'fb'}),res=el('div');
+ b.append(el('p',{html:tx('Robot sa učí rozoznať ovocie a zeleninu. Najprv mu ukáž príklady – ku každému povedz, čo to je. Robot sa naučí presne to, čo mu ukážeš!')}),
+  el('div',{},tr.map(([e,c])=>{const card=el('div',{class:'srt fp'},el('span',{style:'font-size:30px'},e),el('div',{class:'row',style:'margin-left:auto'},['ovocie','zelenina'].map(k=>{const x=el('button',{class:'tbtn',onclick:()=>{lab[e]=k;card.querySelectorAll('.tbtn').forEach(y=>y.classList.toggle('on',y==x))}},k);return x})));return card})),
+  el('div',{class:'row',style:'margin-top:10px'},el('button',{class:'btn',onclick:()=>{if(Object.keys(lab).length<6)return lose(fb,'Najprv označ všetkých 6 príkladov.');
+   const vote={ovocie:{},zelenina:{}};tr.forEach(([e,c])=>vote[c][lab[e]]=(vote[c][lab[e]]||0)+1);const pred=c=>Object.entries(vote[c]).sort((a,z)=>z[1]-a[1])[0][0];let good=0;res.innerHTML='';
+   te.forEach(([e,c])=>{const p=pred(c),g=p==c;good+=g;res.append(el('div',{class:'srt fp'+(g?' done':'')},el('span',{style:'font-size:30px'},e),el('span',{},'Robot: „To je '+p+'.“'),el('b',{style:'margin-left:auto'},g?'✔':'✖')))});
+   good==3?win(fb,'Robot sa naučil dobre, lebo si mu ukázal správne príklady!',ok):lose(fb,'Robot sa pomýlil – naučil sa podľa tvojich príkladov. Ak sú príklady zlé, aj AI je zlá. Oprav označenie a uč ho znova.')}},'🤖 Nauč robota')),res,fb)}},
+promptJ:{n:'Povedz to AI jasne',run(b,ok){const P=shuffle([['Nakresli zviera.','Nakresli usmiateho psa s detektívnym klobúkom na zelenej lúke.'],['Rozprávka.','Vymysli krátku rozprávku o mačke, ktorá hľadá stratený kľúč.'],['Básnička.','Vymysli krátku veselú básničku o snehuliakovi pre deti.'],['Úloha.','Vymysli 3 príklady na sčítanie do 20.']]).slice(0,3);let k=0;const box=el('div');
+ const go=()=>{box.innerHTML='';box.append(el('span',{class:'eyebrow'},`${k+1} / 3`));mc(box,{q:'Ktoré zadanie pre AI je lepšie?',a:P[k][1],w:[P[k][0]],e:'Lepšie zadanie presne povie, čo chceš.'},()=>{if(++k<3)setTimeout(go,900);else ok()});box.append(el('button',{class:'btn sm ghost say',onclick:()=>speak('Ktoré zadanie je lepšie? '+P[k][0]+' alebo '+P[k][1]),html:ic('vol')+' Prečítať'}))};
+ b.append(el('p',{html:tx('Zadaniu pre AI sa hovorí [[prompt]]. Čím presnejšie povieš, čo chceš, tým lepšie ti AI odpovie.')}),box);go()}},
+aiRisk:{n:'Bezpečne s AI',run(b,ok){sorter(b,'Ako sa správa múdry pátrač, keď používa AI?',shuffle([['Poviem AI svoju adresu a telefón.','nebezpečné','Osobné údaje AI nepatria.'],['S pani učiteľkou sa spýtam AI na dinosaury.','správne'],['Verím všetkému, čo AI povie.','nebezpečné','AI sa niekedy mýli.'],['Keď AI odpovie čudne, spýtam sa dospelého.','správne'],['Pošlem AI fotku kamaráta bez jeho dovolenia.','nebezpečné','Kamarát musí súhlasiť.'],['Poviem doma, že som používal AI.','správne']]).slice(0,5),['správne','nebezpečné'],'Si bezpečný pátrač aj vo svete AI!',ok)}},
+trainP:{n:'Trénuj detektor',run(b,ok){const C=['čierna','biela','hnedá'],dot={čierna:'⚫',biela:'⚪',hnedá:'🟤'},cards=[];['mačka','pes'].forEach(s=>C.forEach(c=>cards.push({s,c},{s,c})));const sel=new Set(),fb=el('div',{class:'fb'}),res=el('div');
+ const grid=el('div',{class:'cardg'},shuffle(cards).map((x,i)=>{const t=el('button',{class:'tile wide pk2',onclick:()=>{if(sel.has(x))sel.delete(x);else if(sel.size<6)sel.add(x);t.classList.toggle('on',sel.has(x));cnt.textContent=`Vybraté: ${sel.size} / 6`}},(x.s=='mačka'?'🐈':'🐕')+' '+dot[x.c]);return t})),cnt=el('span',{class:'chip'},'Vybraté: 0 / 6');
+ b.append(el('p',{html:tx('Učíš AI rozoznať mačku od psa. Vyber <b>6 fotiek</b> do [[tréningové dáta|tréningových dát]]. Potom AI otestujeme na nových fotkách. Pozor – AI si často nájde najjednoduchšie pravidlo.')}),cnt,grid,
+  el('div',{class:'row',style:'margin-top:10px'},el('button',{class:'btn',onclick:()=>{const T2=[...sel];if(T2.length<6)return lose(fb,'Vyber presne 6 fotiek.');if(!T2.some(x=>x.s=='mačka')||!T2.some(x=>x.s=='pes'))return lose(fb,'V dátach musia byť mačky aj psy, inak sa AI nemá čo naučiť.');
+   const m={};let sep=true;T2.forEach(x=>{if(m[x.c]&&m[x.c]!=x.s)sep=false;m[x.c]=x.s});const test=shuffle(['mačka','pes'].flatMap(s=>C.map(c=>({s,c})))).slice(0,4);let good=0;res.innerHTML='';
+   const why=sep?`AI si všimla, že farba stačí na rozlíšenie: ${Object.entries(m).map(([c,s])=>dot[c]+' = '+s).join(', ')}. Naučila sa pravidlo podľa farby, nie podľa zvieraťa!`:'Farby boli v dátach premiešané, a tak sa AI musela naučiť skutočné znaky zvierat – uši, ňufák, tvar tela.';
+   test.forEach(x=>{const p=sep?(m[x.c]||pick(['mačka','pes'])):x.s,g=p==x.s;good+=g;res.append(el('div',{class:'srt fp'+(g?' done':'')},el('span',{style:'font-size:24px'},(x.s=='mačka'?'🐈':'🐕')+dot[x.c]),el('span',{},'AI: '+p),el('b',{style:'margin-left:auto'},g?'✔':'✖')))});
+   res.append(el('p',{class:'mut'},why));good==4?win(fb,'AI rozpoznala všetky nové fotky. Rozmanité dáta = spravodlivá a presná AI.',ok):lose(fb,`AI trafila ${good} zo 4. Takto vzniká [zaujatosť]: jednostranné dáta naučia AI zlé pravidlo. Vyber rozmanitejšie fotky.`.replace('[zaujatosť]','zaujatosť (bias)'))}},'Natrénovať a otestovať')),res,fb)}},
+progVsAi:{n:'Program alebo AI?',run(b,ok){sorter(b,'Obyčajný program robí presne to, čo naprogramoval človek. [[umelá inteligencia|AI]] sa pravidlá naučí sama z príkladov. Rozhodni:',shuffle([['Kalkulačka','program s pravidlami'],['Semafor, ktorý mení farby každých 30 s','program s pravidlami'],['Rozpoznávanie reči v mobile','AI učiaca sa z príkladov'],['Filter, ktorý spozná spam','AI učiaca sa z príkladov'],['Odporúčanie videí podľa toho, čo pozeráš','AI učiaca sa z príkladov'],['Budík v mobile','program s pravidlami'],['Hra, v ktorej postava skáče po stlačení medzery','program s pravidlami'],['Aplikácia, ktorá z fotky určí plemeno psa','AI učiaca sa z príkladov']]).slice(0,5),['program s pravidlami','AI učiaca sa z príkladov'],'Program sa správa vždy rovnako. AI sa správa podľa toho, čo sa naučila – preto sa môže aj mýliť.',ok)}},
+promptPick:{n:'Lepší prompt',run(b,ok){const P=shuffle([['Chceš pomoc s vysvetlením zlomkov.','Vysvetli mi zlomky pre 5. ročník na príklade s pizzou, v 5 krátkych vetách.',['zlomky','Napíš mi všetko o matematike.']],['Potrebuješ názov pre detektívny klub.','Vymysli 10 krátkych a vtipných názvov pre detektívny klub žiakov 5. ročníka.',['názov','Aký je najlepší názov na svete?']],['Chceš skontrolovať pravopis slohu.','Oprav pravopisné chyby v tomto texte a chyby vypíš zvlášť. Text: …',['Napíš mi sloh.','Je to dobré?']],['Chceš sa naučiť starať o škrečka.','Napíš 5 najdôležitejších zásad starostlivosti o škrečka v bodoch.',['škrečok','Kúp mi škrečka.']]]).slice(0,3);let k=0;const box=el('div');
+ const go=()=>{box.innerHTML='';box.append(el('span',{class:'eyebrow'},`${k+1} / 3 · ${P[k][0]}`));mc(box,{q:'Ktorý prompt dá najlepšiu odpoveď?',a:P[k][1],w:P[k][2],e:'Dobrý prompt hovorí: čo, pre koho, v akom rozsahu a v akej forme.'},()=>{if(++k<3)setTimeout(go,900);else ok()})};
+ b.append(el('p',{html:tx('[[prompt|Prompt]] je zadanie pre AI. Vyber, ktorý je najlepší.')}),box);go()}},
+halluc:{n:'AI sa mýli',run(b,ok){const V=S.lvl=='insp'?[['Kto vynašiel internet? Uveď zdroj.',[['Základy internetu vznikli v USA v projekte ARPANET koncom 60. rokov. ',0],['Protokol TCP/IP navrhli Vint Cerf a Bob Kahn. ',0],['Web (WWW) vymyslel v roku 1989 Tim Berners-Lee v CERN-e. ',0],['Prvý e-mail poslal v roku 1955 Albert Einstein. ',1,'Vymyslené – Einstein v roku 1955 zomrel a prvý e-mail poslal Ray Tomlinson až v roku 1971.'],['Podľa štúdie Harvardskej univerzity z roku 2021 používa internet 99,9 % ľudí. ',1,'Vymyslená štúdia aj číslo – internet nepoužíva ani 70 % ľudí. AI si zdroje niekedy vymýšľa.'],['Zdroj: harvard-internet-history.edu/studia2021',1,'Odkaz vyzerá dôveryhodne, ale neexistuje. Každý odkaz od AI over.']]],
+  ['Zhrň mi knihu Robinson Crusoe.',[['Román napísal Daniel Defoe ',0],['a vyšiel v roku 1719. ',0],['Robinson stroskotá a žije na ostrove 28 rokov. ',0],['Pomáha mu domorodec Piatok. ',0],['Na konci ho zachráni brat Jonathan, ktorý ho celý čas hľadal. ',1,'Vymyslené – v knihe žiadny brat Jonathan nie je; Robinsona odvezie anglická loď.'],['Kniha získala v roku 1720 Nobelovu cenu. ',1,'Nemožné – Nobelova cena sa udeľuje až od roku 1901.']]]]
+ :[['Povedz mi niečo o Slovensku.',[['Hlavným mestom Slovenska je Bratislava. ',0],['Bratislava leží na rieke Váh. ',1,'Nie – Bratislava leží na Dunaji.'],['Slovensko má 8 krajov. ',0],['Najvyšším vrchom je Kriváň. ',1,'Nie – najvyšší je Gerlachovský štít (2 654 m).'],['Samostatná Slovenská republika vznikla 1. januára 1993. ',0],['Dunaj je najdlhšia rieka Európy. ',1,'Nie – najdlhšia je Volga.']]],
+  ['Povedz mi niečo o zvieratách.',[['Veľryba je cicavec. ',0],['Pavúk má šesť nôh. ',1,'Nie – pavúk má osem nôh. Šesť nôh má hmyz.'],['Tučniaky žijú na južnej pologuli. ',0],['Netopier je vták. ',1,'Nie – netopier je cicavec, ktorý vie lietať.'],['Delfíny dýchajú pľúcami. ',0]]]];
+ const [q,seg]=pick(V),N=seg.filter(s=>s[1]).length;let f=0;const fb=el('div',{class:'fb'}),ex=el('ul',{class:'exl'});
+ b.append(el('p',{html:tx(`AI asistent odpovedal sebavedome, no ${N} ${N<5?'veci sú vymyslené':'vecí je vymyslených'} – to je [[halucinácia]]. Ťukni na nepravdivé tvrdenia.`)}),
+  CH(q,seg.map(([t,fl,e])=>{const s=el('span',{class:'seg',onclick:()=>{if(s.dataset.d)return;if(fl){s.dataset.d=1;s.classList.add('flag');ex.append(el('li',{},e));beep(1);if(++f==N)win(fb,'AI neklame zámerne – len skladá pravdepodobné slová. Fakty od AI preto vždy over v dôveryhodnom zdroji.',ok)}else{shk(s);beep(0);lose(fb,'Toto je pravda. Ak si nie si istý, over si to.')}}},t);return s})),ex,fb)}},
+deepfakeP:{n:'Pravé či deepfake?',run(b,ok){sorter(b,'Na sieti koluje video, v ktorom primátor oznamuje zrušenie letných prázdnin. Je to [[deepfake]]? Posúď jednotlivé zistenia.',shuffle([['Pohyb pier nesedí so zvukom.','podozrivé'],['Tvár neprirodzene žmurká alebo nežmurká vôbec.','podozrivé'],['Okraje tváre sú rozmazané a pri otočení hlavy sa „trhajú“.','podozrivé'],['Video zverejnil neznámy účet a vyzýva na rýchle zdieľanie.','podozrivé'],['To isté oznámenie je na oficiálnej stránke mesta aj v správach.','dôveryhodné'],['Udalosť natočilo viac ľudí z rôznych uhlov.','dôveryhodné'],['Primátor hovorí niečo šokujúce, čo nezodpovedá jeho predchádzajúcim vyjadreniam.','podozrivé']]).slice(0,5),['podozrivé','dôveryhodné'],'Deepfake je čoraz dokonalejší. Najistejšie je overiť zdroj, nie len hľadať chyby v obraze.',ok)}},
+aiWhen:{n:'Kedy použiť AI?',run(b,ok){sorter(b,'AI je dobrý pomocník, ale nie vždy. Rozhodni, čo je rozumné.',shuffle([['Sloh o mojom víkende na domácu úlohu','urobím sám','Ide o tvoje zážitky a tvoje písanie.'],['Nerozumiem zlomkom – nech mi ich vysvetlí inak','AI pomôže'],['Vymyslieť 10 nápadov na názov projektu','AI pomôže'],['Test v škole','urobím sám'],['Zistiť, či je správa o vlkovi v parku pravdivá','overím inde','AI nemusí mať aktuálne a overené informácie.'],['Dátum dnešného zápasu','overím inde','AI môže mať staré údaje.'],['Precvičiť si slovíčka z angličtiny','AI pomôže']]).slice(0,5),['AI pomôže','urobím sám','overím inde'],'Výborne – AI je nástroj. Rozhodnúť, kedy ho použiť, musíš ty.',ok)}},
+llm:{n:'Ako píše AI',run(b,ok){const S1=[['prístave',.45],['tieni',.25],['pivnici',.15],['knižnici',.1],['ponorke',.05]],S2=[['loď',.5],['spojenca',.3],['ráno',.15],['jednorožca',.05]],box=el('div'),gen=el('div'),fb=el('div',{class:'fb'}),r=el('input',{type:'range',min:.1,max:2,step:.1,value:1}),tl=el('b',{},'1,0');
+ const bars=(d,cb)=>el('div',{},d.map(([w,p])=>el('button',{class:'pbar',onclick:()=>cb(w)},el('span',{style:`width:${p*100}%`}),el('em',{},w),el('i',{},Math.round(p*100)+' %'))));
+ const samp=(d,T)=>{const w=d.map(x=>Math.pow(x[1],1/T)),W=w.reduce((a,c)=>a+c);let x=Math.random()*W,i=0;while(x>w[i]){x-=w[i];i++}return d[i][0]};
+ b.append(el('p',{html:tx('[[LLM]] nepíše tak, že by vedel pravdu. Pri každom slove vyberá z pravdepodobných pokračovaní. Vyskúšaj si to – vyber ďalšie slovo.')}),box,gen,fb);
+ box.append(el('p',{class:'qline'},'Tieň sa v noci skrýval v …'),bars(S1,w1=>{box.innerHTML='';box.append(el('p',{class:'qline'},`Tieň sa v noci skrýval v ${w1} a čakal na …`),bars(S2,w2=>{box.innerHTML='';box.append(el('div',{class:'doc'},`Tieň sa v noci skrýval v ${w1} a čakal na ${w2}.`));
+  gen.append(el('p',{html:'Teraz nech píše AI. <b>Teplota</b> určuje, ako veľmi riskuje: nízka = vždy najpravdepodobnejšie slovo, vysoká = prekvapivé (aj nezmyselné) slová.'}),el('label',{},'Teplota: ',tl,r),el('button',{class:'tbtn',onclick:()=>{const T=+r.value;out.prepend(el('div',{class:'srt'},`[${String(T).replace('.',',')}] Tieň sa v noci skrýval v ${samp(S1,T)} a čakal na ${samp(S2,T)}.`));if(out.children.length==3)mcq()}},'✨ Nech dopíše AI'),out)}))}));
+ const out=el('div');r.oninput=()=>tl.textContent=String(r.value).replace('.',',');
+ const mcq=()=>{const q=el('div');gen.append(q);mc(q,{q:'Prečo môže LLM s istotou napísať nepravdu?',a:'Vyberá pravdepodobné slová, nie overené fakty',w:['Zámerne klame','Má pokazenú klávesnicu','Číta iba Wikipédiu']},ok)}}},
+trainTest:{n:'Tréning a test',run(b,ok){const tr=rnd(97,100),te=rnd(48,62),Q=[{q:`AI rozpoznáva podpisy. Na tréningových dátach má úspešnosť ${tr} %, na nových (testovacích) iba ${te} %. Čo sa stalo?`,a:'Naučila sa príklady naspamäť a nevie zovšeobecňovať',w:['Testovacie dáta sú pokazené','AI je dokonalá','Počítač je pomalý'],e:'Hovorí sa tomu pretrénovanie – ako žiak, ktorý sa naučí odpovede naspamäť, ale nerozumie učivu.'},
+ {q:'Prečo testovacie dáta nesmú byť použité pri trénovaní?',a:'AI by ich poznala vopred a test by neukázal, ako funguje na nových údajoch',w:['Zaberali by veľa miesta','Tak to káže zákon','Testovacie dáta sú vždy zlé']},
+ {q:'Máš 1 000 označených fotiek. Ako ich najlepšie rozdelíš?',a:'asi 800 na tréning a 200 na test',w:['1 000 na tréning aj test','100 na tréning, 900 na test','všetky na test']},
+ {q:'AI na rozpoznávanie tvárí trénovali iba na fotkách dospelých. Čo sa pravdepodobne stane?',a:'Na fotkách detí bude robiť viac chýb',w:['Bude fungovať všade rovnako','Na deťoch bude ešte lepšia','Nebude fungovať vôbec na nikom']}];
+ let k=0;const box=el('div');const go=()=>{box.innerHTML='';box.append(el('span',{class:'eyebrow'},`${k+1} / 3`));mc(box,qs[k],()=>{if(++k<3)setTimeout(go,900);else ok()})};const qs=shuffle(Q).slice(0,3);
+ b.append(el('p',{html:tx('Pri [[strojové učenie|strojovom učení]] sa údaje delia na [[tréningové dáta]] a [[testovacie dáta]]. Over, či rozumieš, prečo.')}),box);go()}},
+promptBuild:{n:'Štruktúrovaný prompt',run(b,ok){const V=pick([[['Si skúsený učiteľ informatiky.','rola'],['Pripravujem hodinu o hoaxoch pre 6. ročník.','kontext'],['Vytvor 5 otázok s možnosťami a – c.','úloha'],['Každá otázka najviac 2 vety, bez cudzích slov.','obmedzenia'],['Napríklad: Čo je hoax? a) … b) … c) …','príklad']],
+ [['Správaj sa ako redaktor školského časopisu.','rola'],['Píšem článok o tom, ako rozpoznať deepfake.','kontext'],['Navrhni 3 pútavé nadpisy.','úloha'],['Najviac 8 slov, bez clickbaitu.','obmedzenia'],['Napríklad: „Ver, ale over: 5 znakov deepfaku“','príklad']]]);
+ pairs(b,'Profesionálny [[prompt]] má časti. Urči pri každej vete, ktorou časťou je.',shuffle(V),['rola','kontext','úloha','obmedzenia','príklad'],'Takto poskladaný prompt dáva oveľa presnejšie odpovede:',()=>{b.append(el('div',{class:'doc'},V.map(x=>x[0]).join('\n')));ok()},false)}},
+privacy:{n:'Čo AI nepovieš',run(b,ok){sorter(b,'Čo napíšeš do chatbota, môže byť uložené a použité. Rozhodni, čo do AI patrí.',shuffle([['Rodné číslo spolužiaka','nezadám','Citlivý osobný údaj iného človeka.'],['Heslo do školského systému','nezadám'],['Môj sloh bez mien na kontrolu gramatiky','môžem zadať'],['Fotka lekárskej správy','nezadám','Zdravotné údaje sú citlivé.'],['Otázka, ako funguje fotosyntéza','môžem zadať'],['Celé meno, adresa a fotka kamarátky','nezadám','Bez jej súhlasu nikdy.'],['Prosba o vysvetlenie vzorca v tabuľke','môžem zadať']]).slice(0,5),['môžem zadať','nezadám'],'Do AI nepatria osobné údaje – tvoje ani cudzie. Pýtaj sa na učivo, nie na súkromie.',ok)}},
+aiCite:{n:'Priznaj AI',run(b,ok){sorter(b,'Používať AI nie je zakázané – zakázané je klamať o tom. Čo je v poriadku?',shuffle([['V referáte napíšem: „Osnovu mi pomohla navrhnúť AI, text som písal sám.“','v poriadku'],['AI napísala celý referát a odovzdám ho ako svoj.','nečestné','Je to podvod, aj keď to nik nezistí.'],['AI som použil na kontrolu pravopisu a uvádzam to.','v poriadku'],['Citát od AI dám do práce ako skutočný bez overenia.','nečestné','AI si citáty často vymýšľa.'],['Fakty od AI som overil v dvoch zdrojoch a uviedol ich.','v poriadku'],['Obrázok z AI vydávam za vlastnú fotku.','nečestné']]).slice(0,5),['v poriadku','nečestné'],'Čestnosť: priznaj, kde a ako ti AI pomohla, a za výsledok ručíš ty.',ok)}}
+});
+const SP5={no:'05',name:'Svedok z AI',intro:['„Videl som ho!“','🤖 = pravdepodobné slová','✔ over · priznaj · chráň','Umelá inteligencia je mocný pomocník aj šikovný klamár. Naučíš sa, ako sa učí, prečo sa mýli a ako ju používať múdro a bezpečne.'],
+story:{junior:'Stopár dostal správu od „svedka“ – lenže nepísal ju človek, ale [[robot]] s [[umelá inteligencia|umelou inteligenciou]]! Zisti, čo AI vie, čo nevie a ako s ňou bezpečne zaobchádzať.',
+ patrac:'Tieňov svedok neexistuje – výpoveď napísala [[umelá inteligencia]]. AI je užitočná, ale učí sa z údajov, ktoré jej dáme, a niekedy si vymýšľa. Zisti, ako funguje a kedy jej (ne)veriť.',
+ insp:'Výpoveď „svedka“ vytvoril [[LLM]] a k nej Tieň pridal [[deepfake]] video. Aby sme ho usvedčili, musíš rozumieť, ako sa AI učí, prečo halucinuje a ako ju používať zodpovedne.'},
+tasks:{junior:['aiOrNot','senzor','trainJ','promptJ','aiRisk'],patrac:['progVsAi','trainP','promptPick','halluc','deepfakeP','aiWhen'],insp:['llm','trainTest','trainP','promptBuild','halluc','privacy','aiCite']},
+quiz:{junior:[{q:'Ako sa AI učí?',a:'Z veľa príkladov',w:['Spí a sníva','Vôbec sa neučí']},{q:'Môže sa AI pomýliť?',a:'Áno, niekedy sa mýli',w:['Nie, nikdy','Iba v nedeľu']},{q:'Čo AI nepovieš?',a:'Svoju adresu a heslo',w:['Otázku o zvieratách','Názov obľúbenej farby']},{q:'Ako robot počuje?',a:'Mikrofónom',w:['Ušami','Kolesami']}],
+ patrac:[{q:'Čo je halucinácia AI?',a:'AI s istotou tvrdí nepravdu',w:['AI je unavená','AI kreslí obrázky']},{q:'Prečo musia byť tréningové dáta rozmanité?',a:'Inak sa AI naučí zlé alebo nespravodlivé pravidlá',w:['Aby boli farebné','Nemusia byť']},{q:'Čím sa líši AI od obyčajného programu?',a:'AI sa pravidlá učí z príkladov, program ich má od programátora',w:['Ničím','AI je vždy pomalšia']},{q:'Čo je deepfake?',a:'Falošné video alebo hlas vytvorené AI',w:['Hlboká fotka mora','Vírus v mobile']},{q:'Ktorý prompt je lepší?',a:'Vymysli 5 otázok o hoaxoch pre 5. ročník',w:['otázky','Napíš niečo']}],
+ insp:[{q:'Ako LLM tvorí odpoveď?',a:'Postupne vyberá pravdepodobné ďalšie slová',w:['Hľadá odpoveď v databáze faktov','Pýta sa človeka']},{q:'Čo spôsobí vysoká „teplota“ modelu?',a:'Prekvapivejšie, menej predvídateľné odpovede',w:['Rýchlejšie odpovede','Prehriatie počítača']},{q:'Na čo slúžia testovacie dáta?',a:'Overiť, ako AI funguje na nových údajoch',w:['Na rýchlejší tréning','Na zálohu']},{q:'Ktorá časť promptu určuje „Si skúsený novinár“?',a:'rola',w:['kontext','obmedzenia']},{q:'AI ti dala odkaz na štúdiu. Čo urobíš?',a:'Overím, či štúdia a odkaz naozaj existujú',w:['Rovno ho citujem','Zmažem ho']}]},
+clue:'Svedok z AI je odhalený a deepfake tiež. Máme všetky dôkazy! Zostáva ich prehľadne predstaviť na porade… Pokračuj na nástenke – <b>Spis 06</b>.'};
+/* ---------- SPIS 6: prezentácia a súbory ---------- */
+Object.assign(G,{'prezentácia':'Súbor snímok, ktorými niečo ukazuješ a vysvetľuješ ľuďom. Snímka má mať málo textu a veľa obrazu.','snímka':'Jedna „stránka“ prezentácie.','animácia':'Postupnosť obrázkov (snímok), ktoré sa rýchlo striedajú – vzniká dojem pohybu.','príloha':'Súbor poslaný spolu s e-mailom.','kópia':'Kópia (Cc) – príjemca dostane e-mail na vedomie. Všetci vidia jeho adresu.','skrytá kópia':'Skrytá kópia (Bcc) – príjemcovia nevidia adresy ostatných. Chráni súkromie pri hromadných e-mailoch.','priečinok':'„Zásuvka“ na súbory. Priečinky môžu byť v sebe a tvoria strom.','cesta k súboru':'Zápis, kde je súbor uložený, napr. C:\\Pripady\\2026\\sprava.pdf.','záloha':'Kópia dôležitých súborov pre prípad straty, krádeže alebo poruchy.','cloud':'Úložisko na internete (napr. OneDrive, Google Disk). Súbory sú dostupné z viacerých zariadení.','pravidlo 3-2-1':'3 kópie údajov, na 2 rôznych typoch úložísk, 1 kópia mimo domu (napr. v cloude).','citácia':'Presné uvedenie zdroja: autor, názov, kde a kedy vyšlo (pri webe aj odkaz).'});
+const SL={txt:['odsek','odrážky'],sz:['12','28','60'],col:['žltá na bielej','tmavá na svetlej','červená na modrej'],img:['rozmazaný','ostrý'],an:['8 animácií','1 animácia']},GOOD={txt:'odrážky',sz:'28',col:'tmavá na svetlej',img:'ostrý',an:'1 animácia'};
+function slide(s){const C={'žltá na bielej':['#fff','#facc15'],'tmavá na svetlej':['#f8fafc','#0f172a'],'červená na modrej':['#1d4ed8','#ef4444']}[s.col],f={12:7,28:12,60:24}[s.sz];
+ return el('div',{class:'slide'+(s.an=='8 animácií'?' wob':''),style:`background:${C[0]};color:${C[1]}`},el('div',{class:'sl-t'},'Dôkazy proti Tieňovi'),el('div',{class:'sl-b'},el('div',{class:'sl-i',style:s.img=='rozmazaný'?'filter:blur(3px)':''},'🕵️'),
+  el('div',{style:`font-size:${f}px;line-height:1.3;flex:1`},s.txt=='odsek'?'Tieň šíril šifrované odkazy, pokazil výpoveď svedka, prepisoval čísla v tabuľke, vymyslel správu o vlkovi a dal si od AI napísať falošnú výpoveď, čo sme zistili po dlhom pátraní v meste Šiframesto.':el('ul',{style:'margin:0;padding-left:1.1em'},el('li',{},'šifrované odkazy'),el('li',{},'falošná výpoveď'),el('li',{},'hoax o vlkovi')))),s.an=='8 animácií'?el('span',{class:'sl-a'},'✨×8'):'')}
+const sortList=(b,items,msg,ok)=>{let a;do a=shuffle(items);while(a.join()==items.join());const L=el('div'),fb=el('div',{class:'fb'});
+ const draw=()=>{L.innerHTML='';a.forEach((t,i)=>L.append(el('div',{class:'srt fp'},el('span',{class:'n2'},String(i+1)),el('span',{style:'flex:1'},t),el('button',{class:'tbtn',onclick:()=>{if(i){[a[i-1],a[i]]=[a[i],a[i-1]];draw()}}},'▲'),el('button',{class:'tbtn',onclick:()=>{if(i<a.length-1){[a[i+1],a[i]]=[a[i],a[i+1]];draw()}}},'▼'))))};
+ b.append(L,el('div',{class:'row',style:'margin-top:10px'},el('button',{class:'btn',onclick:()=>{const bad=a.filter((t,i)=>t!=items[i]).length;bad?lose(fb,`${bad} ${bad<5?'snímky sú':'snímok je'} na zlom mieste. Pomôcka: úvod → prípad → dôkazy → záver → zdroje.`):win(fb,msg,ok)}},'Overiť')),fb);draw()};
+const seqMC=(b,txt,Q,ok,say)=>{let k=0;const box=el('div');const go=()=>{box.innerHTML='';box.append(el('span',{class:'eyebrow'},`${k+1} / ${Q.length}`));mc(box,Q[k],()=>{if(++k<Q.length)setTimeout(go,800);else ok()});if(say)box.append(el('button',{class:'btn sm ghost say',onclick:()=>speak(Q[k].q),html:ic('vol')+' Prečítať'}))};b.append(el('p',{html:tx(txt)}),box);go()};
+Object.assign(T,{
+slideOrder:{n:'Poradie snímok',run(b,ok){const P=[['🌙','Bola tmavá noc.'],['🕵️','Stopár našiel stopu.'],['🔦','Posvietil si baterkou.'],['🔑','Našiel stratený kľúč.'],['🏆','Prípad je vyriešený!']];
+ b.append(el('p',{html:tx('Stopár robí [[prezentácia|prezentáciu]] o prípade. Prečítaj príbeh a poukladaj [[snímka|snímky]] v správnom poradí.')}),el('ol',{class:'exl'},P.map(p=>el('li',{},p[1]))),el('button',{class:'btn sm ghost say',onclick:()=>speak(P.map(p=>p[1]).join(' ')),html:ic('vol')+' Prečítať'}));
+ tiles(b,P.map(p=>({l:p[0],v:p[0]})),P.map(p=>p[0]),ok)}},
+animFrames:{n:'Čo chýba v animácii?',run(b,ok){const A=shuffle([['🌱','🌿','🌳'],['🥚','🐣','🐥'],['🌑','🌓','🌕'],['😐','🙂','😄'],['🌥️','🌦️','🌈']]),Q=A.slice(0,3).map((s,i)=>{const m=rnd(0,2);return{q:'Animácia: '+s.map((x,j)=>j==m?'❓':x).join(' ➜ ')+'  Ktorý obrázok chýba?',a:s[m],w:shuffle(A.flat().filter(x=>!s.includes(x))).slice(0,2),e:'Animácia je veľa obrázkov za sebou – každý sa trochu líši.'}});
+ seqMC(b,'[[animácia|Animácia]] je postupnosť obrázkov, ktoré sa rýchlo striedajú. Ktorý obrázok chýba?',Q,ok,true)}},
+pickTool:{n:'Vyber program',run(b,ok){const J=S.lvl=='junior',P=shuffle([['Chcem nakresliť obrázok.','kresliaci program'],['Chcem napísať list babke.','textový editor'],['Chcem ukázať triede fotky z výletu.','prezentácia'],['Chcem spočítať, koľko máme v pokladničke.','tabuľka'],...(J?[]:[['Chcem zostrihať video z výletu.','video editor'],['Chcem nahrať a upraviť svoj hlas.','zvukový editor'],['Chcem orezať fotku a upraviť jej jas.','grafický editor']])]).slice(0,J?3:4),O=['kresliaci program','textový editor','prezentácia','tabuľka','video editor','zvukový editor','grafický editor'];
+ seqMC(b,'Na každú prácu sa hodí iný program. Vyber ten správny.',P.map(([q,a])=>({q,a,w:shuffle(O.filter(x=>x!=a&&(!J||O.indexOf(x)<4))).slice(0,2)})),ok,J)}},
+slideJ:{n:'Pekná snímka',run(b,ok){const keys=shuffle(Object.keys(SL)).slice(0,3),Q=keys.map(k=>k),box=el('div');let i=0;
+ const go=()=>{box.innerHTML='';const bad={...GOOD,[Q[i]]:SL[Q[i]].find(x=>x!=GOOD[Q[i]])},good=Math.random()<.5,fb=el('div',{class:'fb'});
+  const two=[good?GOOD:bad,good?bad:GOOD].map((s,j)=>{const w=el('button',{class:'slb',onclick:()=>{if((s===GOOD)){beep(1);w.classList.add('ok');setTimeout(()=>{if(++i<3)go();else win(fb,'Dobrá snímka: veľký obrázok, málo slov, dobre čitateľné písmo.',ok)},700)}else{shk(w);beep(0)}}},slide(s));return w});
+  box.append(el('span',{class:'eyebrow'},`${i+1} / 3`),el('p',{class:'qline'},'Ťukni na krajšiu snímku.'),el('div',{class:'grs'},two),fb)};
+ b.append(el('p',{html:tx('Ktorá [[snímka]] sa kamarátom bude čítať lepšie?')}),box);go()}},
+slideFix:{n:'Oprav snímku',run(b,ok){const I=S.lvl=='insp',K=I?Object.keys(SL):['txt','sz','col','img'],cur={...GOOD};K.forEach(k=>cur[k]=pick(SL[k].filter(x=>x!=GOOD[k])));const pv=el('div'),fb=el('div',{class:'fb'}),L={txt:'Text',sz:'Veľkosť písma',col:'Farby',img:'Obrázok',an:'Animácie'};
+ const upd=()=>{pv.innerHTML='';pv.append(slide(cur));b.querySelectorAll('[data-k]').forEach(x=>x.classList.toggle('on',cur[x.dataset.k]==x.dataset.v));if(K.every(k=>cur[k]==GOOD[k]))win(fb,'Snímka je čitateľná aj z poslednej lavice. Menej je viac!',ok);else fb.textContent=''};
+ b.append(el('p',{html:tx('Tieňov kolega pripravil [[snímka|snímku]] na poradu. Nedá sa čítať! Oprav ju.')}),pv,...K.map(k=>el('div',{class:'tb'},el('span',{class:'mut',style:'min-width:110px'},L[k]),SL[k].map(v=>el('button',{class:'tbtn','data-k':k,'data-v':v,onclick:()=>{cur[k]=v;upd()}},v)))),
+  el('details',{class:'hint'},el('summary',{},'Pravidlá dobrej snímky'),el('ul',{},el('li',{},'málo textu – iba hlavné body v odrážkach'),el('li',{},'písmo aspoň 24 bodov, nie obrovské'),el('li',{},'kontrast: tmavé písmo na svetlom pozadí (alebo naopak)'),el('li',{},'ostré obrázky'),el('li',{},'animácie striedmo – odvádzajú pozornosť'))),fb);upd()}},
+storyboard:{n:'Osnova prezentácie',run(b,ok){const I=S.lvl=='insp',items=I?['Titulná snímka','Prípad: kto je Tieň','Dôkaz 1: šifrované odkazy','Dôkaz 2: tabuľka alibi','Dôkaz 3: hoax a AI svedok','Záver: Tieň usvedčený','Zdroje']:['Titulná snímka','Prípad: kto je Tieň','Dôkazy','Záver','Zdroje'];
+ b.append(el('p',{html:tx('Zoraď [[snímka|snímky]] záverečnej [[prezentácia|prezentácie]] šípkami ▲▼ tak, aby dávali zmysel.')}));sortList(b,items,'Prezentácia má logický príbeh: úvod, dôkazy, záver a zdroje na konci.',ok)}},
+sourcesList:{n:'Uveď zdroj',run(b,ok){seqMC(b,'Na poslednú snímku patria [[citácia|zdroje]]. Vyber správny zápis.',shuffle([{q:'Použil si článok z novín. Ktorý zápis zdroja je správny?',a:'Kováčová, J.: Vlk v parku? Polícia to vyvrátila. Noviny Šiframesta, 22. 10. 2026.',w:['internet','google.com','nejaké noviny']},{q:'Použil si cudziu fotku s licenciou. Ako to uvedieš?',a:'Foto: Ján Novák, licencia CC BY 4.0',w:['Foto: Google obrázky','Foto: internet','Neuvediem nič']},{q:'Osnovu ti pomohla navrhnúť AI. Ako to uvedieš?',a:'Osnovu pomohol navrhnúť nástroj AI (chatbot), text som písal sám.',w:['Nič neuvediem','Zdroj: AI vie všetko','Napíšem, že som všetko vymyslel sám']},{q:'Použil si web mesta. Čo do zdroja patrí?',a:'Názov stránky, adresa a dátum, kedy si ju čítal',w:['Iba „web“','Farba stránky','Počet lajkov']}]).slice(0,3),ok)}},
+email:{n:'Odošli správu',run(b,ok){const I=S.lvl=='insp',fb=el('div',{class:'fb'}),to=el('input',{class:'inp tin',placeholder:'adresa príjemcu'}),sub=el('input',{class:'inp tin',placeholder:'predmet'}),txt=el('textarea',{class:'inp tin',rows:3,placeholder:'text správy'});
+ const att=el('select',{class:'inp sel',style:'flex:1'},el('option',{value:''},'📎 vyber prílohu…'),['sprava.pdf','sprava_KONCEPT.docx','dovolenka.jpg','heslá.txt'].map(f=>el('option',{value:f},f)));
+ const R=I?[['Nora (nora@kancelaria-sifra.sk)','Komu'],['riaditeľ (riaditel@kancelaria-sifra.sk)','Kópia'],['25 rodičov svedkov','Skrytá kópia']]:[],rs=R.map(()=>el('select',{class:'inp sel'},el('option',{value:''},'vyber…'),['Komu','Kópia','Skrytá kópia'].map(o=>el('option',{value:o},o))));
+ b.append(el('p',{html:tx(I?'Pošli záverečnú správu inšpektorke Nore. Riaditeľ ju má dostať na vedomie. Pošli ju aj 25 rodičom svedkov tak, aby nevideli adresy ostatných. Prilož hotovú správu na odoslanie – nie koncept. Pomôžu [[kópia]] a [[skrytá kópia]].':'Pošli záverečnú správu inšpektorke Nore na adresu <b>nora@kancelaria-sifra.sk</b>. Predmet má povedať, o čo ide, a nezabudni [[príloha|prílohu]] – hotovú správu na odoslanie.')}),
+  el('div',{class:'mail'},el('div',{class:'mh'},'✉️ Nová správa'),I?el('div',{},R.map(([n],i)=>el('div',{class:'row qrow'},el('span',{style:'flex:1 1 160px'},n),rs[i]))):el('label',{},'Komu',to),el('label',{},'Predmet',sub),el('div',{class:'row',style:'margin-top:8px'},att),el('label',{},'Text',txt)),
+  el('div',{class:'row',style:'margin-top:10px'},el('button',{class:'btn',onclick:()=>{const e=[];
+   if(I){if(rs.some((s,i)=>s.value!=R[i][1]))e.push('príjemcovia nie sú v správnych poliach')}else if(to.value.trim().toLowerCase()!='nora@kancelaria-sifra.sk')e.push('adresa príjemcu nie je presná');
+   if(sub.value.trim().length<5)e.push('chýba výstižný predmet');if(att.value!='sprava.pdf')e.push(att.value?'príloha nie je hotová správa vo formáte PDF':'chýba príloha');if(txt.value.trim().length<15)e.push('text je príliš krátky – pozdrav, jedna veta, podpis');
+   e.length?lose(fb,'E-mail sa nedá odoslať: '+e.join('; ')+'.'):win(fb,'📨 Odoslané! '+(I?'Rodičia v skrytej kópii nevidia adresy ostatných – chránil si ich súkromie.':'Dobrý e-mail má presnú adresu, výstižný predmet, prílohu a slušný text.'),ok)}},'Odoslať')),fb)}},
+formats:{n:'Formáty súborov',run(b,ok){const A=[['Fotka z miesta činu','JPG'],['Logo kancelárie zväčšené na plagát','SVG'],['Snímka obrazovky s ostrým textom','PNG'],['Video výpovede','MP4'],['Zvukový záznam hlasu','MP3'],['Hotová správa na odoslanie','PDF'],['Tabuľka údajov pre iný program','CSV']];
+ pairs(b,'Ten istý obsah sa dá uložiť v rôznych formátoch. Vyber pre každý súbor najvhodnejší.',shuffle(A).slice(0,5),A.map(x=>x[1]),'Správne. Formát rozhoduje o kvalite, veľkosti aj o tom, kto a čím súbor otvorí.',ok,false)}},
+paths:{n:'Cesta k súboru',run(b,ok){const F=pick([['svedok.mp3',['Pripady','2026','Tien','dokazy']],['sifra.png',['Pripady','2026','Tien','dokazy']],['sprava.pdf',['Pripady','2026','Tien']]]),p='C:\\'+[...F[1],F[0]].join('\\'),fb=el('div',{class:'fb'}),q=el('div');
+ const tree=`C:\\\n└─ Pripady\n   ├─ 2025\n   │  └─ Lupic\n   └─ 2026\n      └─ Tien\n         ├─ dokazy\n         │  ├─ sifra.png\n         │  └─ svedok.mp3\n         └─ sprava.pdf\n└─ Skola\n   └─ referat.docx`;
+ const nm=s=>norm(s).replace(/\//g,'\\').replace(/^C:/,'').replace(/^\\/,'');
+ b.append(el('p',{html:tx('Toto je strom [[priečinok|priečinkov]] kancelárie. Napíš celú [[cesta k súboru|cestu k súboru]] <b>'+F[0]+'</b> (priečinky oddeľuj znakom \\ alebo /).')}),el('pre',{class:'tree'},tree));
+ const inp=el('input',{class:'inp tin',placeholder:'C:\\…',autocapitalize:'off'});b.append(el('div',{class:'row'},inp,el('button',{class:'btn',onclick:()=>{if(nm(inp.value)==nm(p)){win(fb,'Presne: '+p,()=>{});mc(q,{q:'Kam uložíš novú fotku dôkazu v prípade Tieň?',a:'C:\\Pripady\\2026\\Tien\\dokazy',w:['C:\\Skola','C:\\Pripady\\2025\\Lupic','na plochu – nájdem ju potom']},ok)}else lose(fb,'Ešte nie. Začni od C:\\ a postupuj stromom priečinok po priečinku až k súboru.')}},'Overiť')),fb,q)}},
+backup:{n:'Záloha a zdieľanie',run(b,ok){sorter(b,'Dôkazy nesmú zmiznúť ani sa dostať k nesprávnym ľuďom. Čo je bezpečnejšie? Pomôže [[pravidlo 3-2-1]].',shuffle([['Dôležitá správa je iba na jednom USB kľúči.','riskantné','Stratou alebo poruchou kľúča prídeš o všetko.'],['Mám kópiu na disku a ďalšiu v [[cloud|cloude]].'.replace('[[cloud|cloude]]','cloude'),'bezpečnejšie'],['Počítač sa automaticky zálohuje každý týždeň.','bezpečnejšie'],['Priečinok s dôkazmi zdieľam verejným odkazom pre kohokoľvek.','riskantné','Odkaz sa môže dostať k Tieňovi.'],['Správu zdieľam iba s Norou a iba na čítanie.','bezpečnejšie'],['Novou verziou prepíšem starú a inú kópiu nemám.','riskantné']]).slice(0,5),['bezpečnejšie','riskantné'],'Zálohuj pravidelne a zdieľaj iba s tými, ktorí to potrebujú.',ok)}}
+});
+const SP6={no:'06',name:'Záverečná správa',intro:['DÔKAZY','▶ snímka 1 · 2 · 3','📎 sprava.pdf ✉️','Najlepšie dôkazy nepomôžu, ak ich nevieš ukázať. Pripravíš prezentáciu, uvedieš zdroje, uložíš súbory a pošleš správu tým správnym ľuďom.'],
+story:{junior:'Prípad je skoro vyriešený! Stopár chce kamarátom ukázať, ako to celé bolo. Pomôž mu pripraviť pekné [[snímka|snímky]] – [[prezentácia|prezentáciu]].',
+ patrac:'Máme dôkazy proti Tieňovi. Teraz ich treba ukázať na porade a poslať inšpektorke Nore. Priprav jasnú [[prezentácia|prezentáciu]], uveď zdroje a odošli správu e-mailom.',
+ insp:'Záverečná správa musí byť bezchybná: prehľadná prezentácia, správne formáty, uložené a zálohované súbory a e-mail tým správnym ľuďom. Tieň čaká na najmenšiu chybu.'},
+tasks:{junior:['slideOrder','animFrames','slideJ','pickTool'],patrac:['pickTool','slideFix','storyboard','sourcesList','email'],insp:['slideFix','storyboard','formats','paths','email','backup']},
+quiz:{junior:[{q:'Čo je snímka?',a:'Jedna „stránka“ prezentácie',w:['Fotka z mobilu','Druh počítača']},{q:'Animácia je…',a:'veľa obrázkov rýchlo za sebou',w:['jeden obrázok','dlhý text']},{q:'Čo dáme na snímku?',a:'Veľký obrázok a málo slov',w:['Veľa malého textu','Nič']},{q:'Ktorý program použiješ na kreslenie?',a:'Kresliaci program',w:['Kalkulačku','Tabuľku']}],
+ patrac:[{q:'Koľko textu má byť na snímke?',a:'Málo – hlavné body v odrážkach',w:['Celý referát','Čo najviac, nech je to podrobné']},{q:'Čo patrí na koniec prezentácie?',a:'Záver a zdroje',w:['Titulná snímka','Nič']},{q:'Čo je príloha e-mailu?',a:'Súbor poslaný spolu so správou',w:['Podpis','Predmet správy']},{q:'Ktorý program použiješ na strih videa?',a:'Video editor',w:['Tabuľkový editor','Kalkulačku']},{q:'Ako správne uvedieš zdroj fotky?',a:'Autor a licencia, napr. Foto: J. Novák, CC BY',w:['Foto: internet','Foto: Google']}],
+ insp:[{q:'Kedy použiješ skrytú kópiu (Bcc)?',a:'Keď príjemcovia nemajú vidieť adresy ostatných',w:['Keď chcem e-mail zašifrovať','Vždy, je to rýchlejšie']},{q:'Čo je cesta k súboru?',a:'Zápis, v ktorých priečinkoch je súbor uložený',w:['Rýchlosť sťahovania','Názov programu']},{q:'Čo hovorí pravidlo zálohovania 3-2-1?',a:'3 kópie, 2 typy úložísk, 1 kópia mimo domu',w:['3 heslá, 2 počítače, 1 mobil','Zálohovať o 3:21']},{q:'Ktorý formát je najlepší pre logo zväčšené na plagát?',a:'SVG',w:['JPG','MP3','TXT']},{q:'Prečo nedať na snímku 8 animácií?',a:'Odvádzajú pozornosť od obsahu',w:['Sú zakázané','Spomaľujú internet']}]},
+clue:'Tieň je usvedčený! 🎉 Všetky spisy sú uzavreté. Teraz zlož <b>Skúšku detektíva</b> – tréning na IT Fitness Test.'};
+/* ---------- SKÚŠKA DETEKTÍVA ---------- */
+const CAT={s1:'Kódovanie a údaje',s2:'Práca s textom',s3:'Tabuľky',s4:'Internet a overovanie',s5:'Umelá inteligencia',s6:'Prezentácia a súbory'};
+const EXX={junior:[{q:'Komu povieš svoje heslo?',a:'Nikomu – iba rodičom',w:['Kamarátovi','Každému v hre'],c:'Bezpečnosť'},{q:'Neznámy človek v hre chce tvoju fotku. Čo urobíš?',a:'Nepošlem ju a poviem to dospelému',w:['Pošlem ju','Pošlem fotku kamaráta']},].map(x=>({c:'Bezpečnosť',...x})),
+ more:[{q:'Ktoré heslo je najbezpečnejšie?',a:'Kocur!Lieta7Nad*Mestom',w:['123456','heslo','janko2012']},{q:'E-mail píše: „Overte si účet do 24 hodín, inak bude zrušený“ a ponúka odkaz. Čo urobíš?',a:'Nekliknem, overím si to priamo na stránke služby',w:['Kliknem a prihlásim sa','Pošlem heslo odpoveďou']},{q:'Čo je dvojfázové overenie?',a:'Okrem hesla potvrdím prihlásenie aj kódom alebo v mobile',w:['Dve rôzne heslá','Prihlásenie dvakrát denne']},{q:'Čo znamená https a zámok pri adrese stránky?',a:'Spojenie so stránkou je šifrované',w:['Stránka je určite dôveryhodná','Stránka je zamknutá pre všetkých']},{q:'Čo je phishing?',a:'Podvod, ktorým chce útočník vylákať heslo alebo údaje',w:['Rybárska hra','Zálohovanie dát']},{q:'Niekto ťa online opakovane uráža. Čo urobíš?',a:'Uložím dôkazy, zablokujem ho a poviem to dospelému',w:['Odpoviem mu rovnako','Nikomu to nepoviem']}].map(x=>({c:'Bezpečnosť',...x}))};
+function exam(){const lv=S.lvl,N={junior:8,patrac:12,insp:15}[lv];let pool=[];
+ Object.entries(SP).forEach(([sid,sp])=>{[lv,...(lv=='insp'?['patrac']:[])].forEach(l=>sp.quiz[l].forEach(q=>pool.push({c:CAT[sid],...(typeof q=='function'?q():q)})))});
+ pool=pool.concat(lv=='junior'?EXX.junior:EXX.more);const Q=shuffle(pool).slice(0,N),res=[];let k=0,t0=Date.now();app.innerHTML='';scrollTo(0,0);
+ const tm=el('span',{class:'chip'},'0:00'),iv=setInterval(()=>{if(!tm.isConnected)return clearInterval(iv);const s=Math.floor((Date.now()-t0)/1000);tm.textContent=`⏱ ${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`},1000);
+ const box=el('div',{class:'card task'});
+ app.append(el('button',{class:'btn sm ghost',onclick:home,html:ic('back')+' Nástenka'}),el('div',{class:'casehead'},el('div',{},el('span',{class:'eyebrow'},'Skúška · '+LV[lv].n),el('h2',{},'Skúška detektíva')),tm),
+  el('p',{class:'mut'},`${N} otázok z celého kurzu v štýle IT Fitness Testu. Každá otázka má iba jeden pokus.`),box);
+ const show=()=>{const q=Q[k],opts=shuffle([q.a,...q.w]);box.innerHTML='';let done=false;const fb=el('div',{class:'fb'});
+  box.append(el('div',{class:'bar',style:'margin-bottom:12px'},el('i',{style:`width:${k/N*100}%`})),el('span',{class:'eyebrow'},`Otázka ${k+1} / ${N} · ${q.c}`),el('p',{class:'qline'},q.q),
+   ...opts.map(o=>{const x=el('button',{class:'opt',onclick:()=>{if(done)return;done=true;const g=o===q.a;res.push({c:q.c,g});beep(g);x.classList.add(g?'ok':'bad');
+    if(!g)box.querySelectorAll('.opt').forEach(y=>{if(y.textContent===q.a)y.classList.add('ok')});fb.className='fb '+(g?'ok':'bad');fb.innerHTML=(g?'✔ Správne. ':'✘ Správna odpoveď je vyznačená. ')+(q.e||'');
+    box.append(el('div',{class:'row',style:'margin-top:12px'},el('button',{class:'btn',onclick:()=>{if(++k<N)show();else end()}},k+1<N?'Ďalšia otázka →':'Vyhodnotiť')))}},o);return x}),fb);if(lv=='junior')box.append(el('button',{class:'btn sm ghost say',onclick:()=>speak(q.q+'. '+opts.join(', ')),html:ic('vol')+' Prečítať'}))};
+ const end=()=>{const g=res.filter(r=>r.g).length,pc=Math.round(g/N*100),sec=Math.floor((Date.now()-t0)/1000);S.best=S.best||{};S.best[lv]=Math.max(S.best[lv]||0,pc);save();
+  const rank=pc>=90?['🏅','Hlavný inšpektor']:pc>=70?['🥇','Detektív']:pc>=50?['🥈','Pátrač']:['🔍','Nováčik'],cats={};res.forEach(r=>{cats[r.c]=cats[r.c]||[0,0];cats[r.c][1]++;if(r.g)cats[r.c][0]++});
+  const nm=el('input',{class:'inp tin',placeholder:'Tvoje meno na odznak',style:'flex:1'}),who=el('div',{class:'cert-n'},'');nm.oninput=()=>who.textContent=nm.value;
+  box.innerHTML='';box.append(el('div',{class:'cert'},el('div',{class:'cert-b'},rank[0]),el('span',{class:'eyebrow'},'Detektívna kancelária Šifra'),el('h2',{style:'margin:4px 0'},rank[1]),who,el('div',{class:'cert-s'},`${pc} %`),el('div',{class:'mut'},`${g} z ${N} správne · čas ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')} · ${LV[lv].n} · ${new Date().toLocaleDateString('sk-SK')}`)),
+   el('h3',{},'Výsledky podľa oblastí'),...Object.entries(cats).map(([c,[a,n]])=>el('div',{class:'catr'},el('span',{},c),el('div',{class:'bar'},el('i',{style:`width:${a/n*100}%;background:${a/n>=.7?'linear-gradient(90deg,#16a34a,#4ade80)':'linear-gradient(90deg,#f59e0b,#fbbf24)'}`})),el('b',{},`${a}/${n}`))),
+   el('p',{class:'mut'},Object.entries(cats).filter(([c,[a,n]])=>a/n<.7).length?'Oblasti so žltým pásom si zopakuj v príslušnom spise.':'Výborne – zvládaš všetky oblasti!'),
+   el('div',{class:'row',style:'margin-top:12px'},nm,el('button',{class:'btn sm ghost',onclick:()=>print()},'🖨 Vytlačiť odznak')),
+   el('div',{class:'row',style:'margin-top:10px'},el('button',{class:'btn',onclick:exam,html:ic('reload')+' Nová skúška'}),el('button',{class:'btn ghost',onclick:home},'Nástenka')));
+  if(pc>=70)box.querySelector('.cert').classList.add('gold')};
+ show()}
+/* ---------- obrazovky ---------- */
+const app=$('#app');
+const thm=()=>document.body.className=S.lvl=='insp'?'':(S.lvl||'patrac');
+function setLvl(l){S.lvl=l;save();thm()}
+function strings(){const b=$('.board');if(!b)return;const sv=b.querySelector('.strings'),r=b.getBoundingClientRect();
+ const ps=[...b.querySelectorAll('.pin')].map(p=>{const q=p.getBoundingClientRect();return[q.left-r.left+q.width/2,q.top-r.top+q.height/2]});
+ let d='';for(let i=1;i<ps.length;i++){const[a,y1]=ps[i-1],[c,y2]=ps[i];d+=`M${a.toFixed(1)} ${y1.toFixed(1)}Q${((a+c)/2).toFixed(1)} ${(Math.max(y1,y2)+38).toFixed(1)} ${c.toFixed(1)} ${y2.toFixed(1)}`}
+ sv.setAttribute('viewBox',`0 0 ${r.width} ${r.height}`);sv.innerHTML=`<path d="${d}" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-opacity=".75"/>`}
+addEventListener('resize',strings);
+function home(){
+ app.innerHTML='';thm();scrollTo(0,0);const J=S.lvl=='junior';
+ const board=el('div',{class:'board'},SPISY.map((s,i)=>{const sp=SP[s.id],open=!!sp||s.id=='ex';let pr=null,dn=false;
+  if(s.id=='ex'&&S.lvl&&S.best&&S.best[S.lvl]!=null){pr=el('div',{class:'bar'},el('i',{style:`width:${S.best[S.lvl]}%`}));dn=S.best[S.lvl]>=70}
+  if(sp&&S.lvl){const all=[...sp.tasks[S.lvl],'quiz'],d=all.filter(x=>isDone(s.id,x)).length;pr=el('div',{class:'bar'},el('i',{style:`width:${d/all.length*100}%`}));dn=isDone(s.id,'closed')}
+  return el('button',{class:'file'+(open?'':' lock'),onclick:()=>{if(!open)return;if(!S.lvl){$('.levels').scrollIntoView({behavior:'smooth',block:'center'});$('.levels').animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'none'}],{duration:300});return}s.id=='ex'?exam():intro(s.id)}},
+   el('span',{class:'pin'}),el('div',{class:'fhead',html:`<span class="no">${s.id=='ex'?'SKÚŠKA':'SPIS 0'+(i+1)}</span>${ic(s.id)}`}),el('b',{},s.n),el('span',{class:'desc'},s.d),pr,dn?el('span',{class:'st'},s.id=='ex'?'SPLNENÁ':'UZAVRETÝ'):null,open?null:el('span',{class:'tape'},'ČOSKORO'))}));
+ board.insertAdjacentHTML('afterbegin','<svg class="strings"></svg>');
+ app.append(el('section',{class:'card hero'},el('div',{html:J?townJ():town(S.lvl!='insp')}),el('div',{class:'in'},
+   el('span',{class:'eyebrow'},J?'Nový prípad pre pátračov':'Prípad č. 26/11 · Tieň'),
+   el('h2',{html:J?'Kto nám posiela <em>tajné odkazy</em>?':'Kto je <em>Tieň</em>?'}),
+   el('p',{class:'mut',style:'margin:0 0 14px'},J?'Na dverách kancelárie sa objavujú čudné lístky. Pomôž Stopárovi zistiť, čo v nich stojí – a nauč sa pri tom, ako počítač zapisuje písmená a obrázky.':'Mestom sa šíria šifrované odkazy a falošné správy. Rieš spisy, lúšti kódy, opravuj dokumenty, preveruj zdroje a odhaľ, kto za tým stojí.'),
+   el('div',{class:'row'},['7 spisov','3 úrovne','ŠVP 2023 · IT Fitness'].map(x=>el('span',{class:'chip'},x))))),
+  el('div',{class:'sec'},el('span',{class:'num'},'01'),el('h3',{},'Vyber si hodnosť')),
+  el('div',{class:'levels'},Object.entries(LV).map(([k,v])=>el('button',{class:'lv'+(S.lvl==k?' on':''),onclick:()=>{setLvl(k);home();setTimeout(()=>$('.board').scrollIntoView({behavior:'smooth',block:'start'}),50)}},el('span',{html:av(v.a)}),el('div',{},el('b',{},v.n),el('span',{},v.s))))),
+  el('div',{class:'sec'},el('span',{class:'num'},'02'),el('h3',{},'Nástenka so spismi')),board);
+ requestAnimationFrame(strings);if(document.fonts)document.fonts.ready.then(strings);
+}
+const SP={s1:SP1,s2:SP2,s3:SP3,s4:SP4,s5:SP5,s6:SP6};
+function intro(sid){const sp=SP[sid],o=$('#intro');o.innerHTML='';
+ o.append(el('div',{class:'inum'},sp.no),el('span',{class:'eyebrow',style:'margin:6px 0 18px'},'Spis · '+sp.name),
+  el('div',{class:'ln a1',html:sp.intro[0].replace(/ /g,'&nbsp;')}),el('div',{class:'ln a2',html:sp.intro[1]}),el('div',{class:'ln a3',html:sp.intro[2]}),el('p',{},sp.intro[3]),
+  el('div',{class:'row',style:'margin-top:18px;justify-content:center'},el('button',{class:'btn',onclick:()=>{o.classList.remove('show');spis(sid)}},'Otvoriť spis →')));
+ o.classList.add('show')}
+function spis(sid,ti=0){
+ const sp=SP[sid],lv=S.lvl,L=LV[lv],all=[...sp.tasks[lv],'quiz'],st=sp.story[lv];app.innerHTML='';scrollTo(0,0);
+ const dn=x=>isDone(sid,x),dc=all.filter(dn).length,C=138.2;
+ app.append(el('button',{class:'btn sm ghost',onclick:home,html:ic('back')+' Nástenka'}),
+  el('div',{class:'casehead'},el('div',{},el('span',{class:'eyebrow'},`Spis ${sp.no} · ${L.n}`),el('h2',{},sp.name)),
+   el('div',{html:`<svg class="ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="32" cy="32" r="22" fill="none" stroke="var(--acc)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${(C*(1-dc/all.length)).toFixed(1)}" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle">${dc}/${all.length}</text></svg>`})),
+  el('div',{class:'card guide'},el('span',{html:av(L.g)}),el('div',{class:'bubble'},el('span',{class:'who'},L.gn),el('div',{html:tx(st)}),sayBtn(st))));
+ const nav=el('div',{class:'tasknav'},all.map((id,i)=>el('button',{class:(i==ti?'on ':'')+(dn(id)?'ok':''),onclick:()=>spis(sid,i)},el('span',{class:'n'},dn(id)?'✓':String(i+1)),id=='quiz'?'Výsluch':T[id].n)));
+ const box=el('div',{class:'card task'}),id=all[ti];
+ const next=()=>{markDone(sid,id);const b=nav.children[ti];b.classList.add('ok');b.querySelector('.n').textContent='✓';
+  if(all.every(dn)){markDone(sid,'closed');box.append(el('div',{class:'closed'},el('div',{class:'stamp'},'SPIS UZAVRETÝ'),el('p',{html:sp.clue})))}
+  else box.append(el('div',{class:'row',style:'margin-top:12px'},el('button',{class:'btn',onclick:()=>spis(sid,all.findIndex(x=>!dn(x)))},'Ďalšia úloha →')))};
+ if(id=='quiz'){
+  box.append(el('span',{class:'eyebrow'},'Záverečný výsluch'),el('h3',{},'Výsluch'),el('p',{class:'mut',style:'margin:0'},'Tri otázky. Odpovedz na všetky správne a spis sa uzavrie.'));
+  const qs=shuffle(sp.quiz[lv]).slice(0,3).map(q=>typeof q=='function'?q():q);let n=0;
+  qs.forEach(q=>{const d=el('div',{class:'qcard'});mc(d,q,()=>{if(++n==3)next()});if(lv=='junior')d.append(sayBtn(q.q+'. Možnosti: '+[q.a,...q.w].join(', ')));box.append(d)});
+ }else{
+  box.append(el('span',{class:'eyebrow'},`Úloha ${ti+1} / ${all.length-1}`),el('h3',{},T[id].n),...(dn(id)?[el('div',{class:'done'},'✓ Vyriešené – tu je nový prípad s inými údajmi')]:[]));
+  const inner=el('div');box.append(inner);let fired=false;T[id].run(inner,()=>{if(!fired){fired=true;next()}});
+  box.append(el('div',{class:'row',style:'margin-top:12px'},el('button',{class:'btn sm ghost',onclick:()=>spis(sid,ti),html:ic('reload')+' Nový prípad'})));
+ }
+ app.append(nav,box);
+}
+$('#bHome').onclick=home;$('#bHome').insertAdjacentHTML('afterbegin',LOGO);$('#bGl').innerHTML=ic('book');
+$('#bGl').onclick=e=>{e.stopPropagation();openSheet('<h3>Slovník pojmov</h3><dl class="gl">'+Object.entries(G).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')+'</dl>')};
+const mb=$('#bMute');const mu=()=>mb.innerHTML=ic(S.mute?'mute':'vol');mb.onclick=()=>{S.mute=!S.mute;save();mu()};mu();
+home();
+</script>
+</body></html>
